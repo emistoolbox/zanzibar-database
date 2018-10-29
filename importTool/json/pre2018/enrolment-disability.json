@@ -1,0 +1,66 @@
+{
+	"lookups": {
+		"levels": {
+			"type": "simple", 
+			"mappings": "PPE=0,PRIMARY=1,SECONDARY=2"
+		} 
+    }, 
+    "processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "EMIS ID", "Year", "Education Level", "gender", "disability", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/DISABILITIES.csv" }
+                ],
+				"filters": [
+					{ "type": "map", "mappings": { "Education Level": "levels" }},
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "EMIS ID", "Year", "Education Level" ],
+						"constColumnHeaders": [ "gender", "disability" ],
+						"constColumnValues" : {
+                            "Visual_Male": "0,0",
+                            "Visual_Female": "1,0",
+                            "Partial-Visual_Male": "0,7",
+                            "Partial-Visual_Female": "1,7" ,
+                            "Albino_Male": "0,8",
+                            "Albino_Female": "1,8" ,
+                            "Physical_Male": "0,1",
+                            "Physical_Female": "1,1",
+                            "Deaf_Male": "0,2",
+                            "Deaf_Female": "1,2",
+                            "Mute_Male": "0,3",
+                            "Mute_Female": "1,3",
+                            "Mental_Male": "0,4",
+                            "Mental_Female": "1,4",
+                            "Mixed_Male": "0,5",
+                            "Mixed_Female": "1,5",
+                            "Other_Male": "0,6",
+                            "Other_Female": "1,6"
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "enrolment_disabilities_pre2018", 
+						"notNullColumns": [ "EMIS ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "EMIS ID",
+							"year": "Year",
+							"education_level_id": "Education Level",
+							"gender_id": "gender",
+							"disability_id": "disability",
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}

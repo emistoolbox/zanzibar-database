@@ -1,0 +1,68 @@
+{
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "grade", "gender", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ABSTRACT.csv", "consts": { "level": "0"} },  
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1"} },  
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv", "consts": { "level": "2"} }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year" ],
+						"constColumnHeaders": [ "gender", "grade" ],
+						"constColumnValues" : {
+							"Dropouts_Std I_Male": "0,4", 
+							"Dropouts_Std I_Female": "1,4", 
+							"Dropouts_Std II_Male": "0,5", 
+							"Dropouts_Std II_Female": "1,5", 
+							"Dropouts_Std III_Male": "0,6", 
+							"Dropouts_Std III_Female": "1,6", 
+							"Dropouts_Std IV_Male": "0,7", 
+							"Dropouts_Std IV_Female": "1,7", 
+							"Dropouts_Std V_Male": "0,8", 
+							"Dropouts_Std V_Female": "1,8", 
+							"Dropouts_Std VI_Male": "0,9", 
+							"Dropouts_Std VI_Female": "1,9", 
+							"Dropouts_Std VII_Male": "0,10", 
+							"Dropouts_Std VII_Female": "1,10", 
+							"Dropouts_Form 1_Male": "0,11", 
+							"Dropouts_Form 1_Female": "1,11", 
+							"Dropouts_Form 2_Male": "0,12", 
+							"Dropouts_Form 2_Female": "1,12", 
+							"Dropouts_Form 3_Male": "0,13", 
+							"Dropouts_Form 3_Female": "1,13", 
+							"Dropouts_Form 4_Male": "0,14", 
+							"Dropouts_Form 4_Female": "1,14", 
+							"Dropouts_Form 5_Male": "0,15", 
+							"Dropouts_Form 5_Female": "1,15", 
+							"Dropouts_Form 6_Male": "0,16", 
+							"Dropouts_Form 6_Female": "0,16" 
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "enrolment_dropouts", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"gender_id": "gender",
+							"grade_id": "grade",
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,82 @@
+{
+    "lookups": {
+ 		"EmisIdLookup": { 
+            "type": "file", 
+            "keyColumn": "interview__id", 
+            "valueColumn": "emis_id", 
+            "source": {
+                "type": "union", 
+                "headers": [ "interview__id", "emis_id" ], 
+                "sources": [
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+                ]
+            }
+        },  
+ 		"EducationLevelLookup": { 
+            "type": "file", 
+            "keyColumn": "interview__id", 
+            "valueColumn": "education_level_id", 
+            "source": {
+                "type": "union", 
+                "headers": [ "interview__id", "education_level_id" ], 
+                "sources": [
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+                ]
+            }
+        }, 
+ 		"YearLookup": { 
+            "type": "file", 
+            "keyColumn": "interview__id", 
+            "valueColumn": "year", 
+            "source": {
+                "type": "union", 
+                "headers": [ "interview__id", "year" ], 
+                "sources": [
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+                ]
+            }
+        }
+    },
+    
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "education_level_id", "revenue_id", "revenue_tsh"],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/r_revenue_qty.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/r_revenue_qty.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/r_revenue_qty.tab" }
+				], 
+				"filters": [
+                    { "type": "rename", "renames": { "r_revenue_qty__id": "revenue_id" }},
+					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id", "education_level_id": "interview__id" } }, 
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup", "education_level_id": "EducationLevelLookup" }}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "revenues", 
+						"withDelete": false, 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"education_level_id": "education_level_id", 
+							"revenue_id": "revenue_id", 
+							"amount": "revenue_tsh"
+						}
+					}
+				}
+			]
+		}
+	]
+}

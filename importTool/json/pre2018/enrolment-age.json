@@ -1,0 +1,99 @@
+{
+	"lookups": {
+		"grades" : {
+			"type": "simple", 
+			"mappings": "Nr=1,Jr=2,Sr=3,STD I=4,STD II=5,STD III=6,STD IV=7,STD V=8,STD VI=9,STD VII=10,FORM I=11,FORM II=12,FORM III=13,FORM IV=14,FORM V=15,FORM VI=16"
+		}
+	},
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "Grade", "gender", "age", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ENROL BY AGE.csv", "consts": { "level": "0", "Grade": "Sr"} },  
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ENROL BY AGE.csv", "consts": { "level": "1"} },  
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ENROL BY AGE.csv", "consts": { "level": "2"} }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "Grade" ],
+						"constColumnHeaders": [ "gender", "age"],
+						"constColumnValues" : {
+							"AGE 3_Male": "0,3", 
+							"AGE 3_Female": "1,3", 
+							"AGE 4_Male": "0,4", 
+							"AGE 4_Female": "1,4", 
+							"AGE 5_Male": "0,5", 
+							"AGE 5_Female": "1,5", 
+							"AGE 6_Male": "0,6", 
+							"AGE 6_Female": "1,6", 
+							"AGE 7 +_Male": "0,7", 
+							"AGE 7 +_Female": "1,7",
+							"UNDER 6_Male": "0,5", 
+							"UNDER 6_Female": "1,5", 
+							"AGE 7_Male": "0,7", 
+							"AGE 7_Female": "1,7", 
+							"AGE 8_Male": "0,8", 
+							"AGE 8_Female": "1,8", 
+							"AGE 9_Male": "0,9", 
+							"AGE 9_Female": "1,9", 
+							"AGE 10_Male": "0,10", 
+							"AGE 10_Female": "1,10", 
+							"AGE 11_Male": "0,11", 
+							"AGE 11_Female": "1,11", 
+							"AGE 12_Male": "0,12", 
+							"AGE 12_Female": "1,12", 
+							"AGE 13_Male": "0,13", 
+							"AGE 13_Female": "1,13", 
+							"AGE 14_Male": "0,14", 
+							"AGE 14_Female": "1,14", 
+							"OVER 14_Male": "0,15", 
+							"OVER 14_Female": "1,15",
+							"UNDER 12_Male": "0,11", 
+							"UNDER 12_Female": "1,11", 
+							"AGE 15_Male": "0,15", 
+							"AGE 15_Female": "1,15", 
+							"AGE 16_Male": "0,16", 
+							"AGE 16_Female": "1,16", 
+							"AGE 17_Male": "0,17", 
+							"AGE 17_Female": "1,17", 
+							"AGE 18_Male": "0,18", 
+							"AGE 18_Female": "1,18", 
+							"AGE 19_Male": "0,19", 
+							"AGE 19_Female": "1,19", 
+							"OVER 19_Male": "0,20", 
+							"OVER 19_Female": "1,20"
+						}
+					}, 
+					{
+						"type": "map",
+						"mappings": { 
+							"Grade": "grades"
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "enrolment_ages", 
+						"notNullColumns": [ "School_EMIS_ID", "Year", "Grade" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"gender_id": "gender",
+							"grade_id": "Grade",
+							"age": "age", 
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,52 @@
+{ 
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "level", "gender", "qualification", "count"],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ABSTRACT.csv", "consts": { "level": "0" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEc ABSTRACT.csv", "consts": { "level": "2" } }
+				], 
+				"filters": [
+					{ "type": "rename", "matchRegex": "Teachers'", "replaceRegex": "Teacher" }, 
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "level" ],
+						"constColumnHeaders": [ "gender", "qualification" ],
+						"constColumnValues" : {
+							"Teacher Attrition_Untrained_Male": "0,0", 
+							"Teacher Attrition_Untrained_Female": "1,0", 
+							"Teacher Attrition_Certificate_Male": "0,1", 
+							"Teacher Attrition_Certificate_Female": "1,1", 
+							"Teacher Attrition_Diploma_Male": "0,2", 
+							"Teacher Attrition_Diploma_Female": "1,2", 
+							"Teacher Attrition_Degree and above_Male": "0,3", 
+							"Teacher Attrition_Degree and above_Female": "1,3" 
+						}
+					}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "teacher_attritions", 
+						"withDelete": true, 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"columns": { 
+							"emis_id": "School_EMIS_ID",
+							"year": "Year", 
+							"education_level_id": "level", 
+							"gender_id": "gender", 
+							"teacher_edu_condensed_id": "qualification", 
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}

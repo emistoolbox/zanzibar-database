@@ -1,0 +1,59 @@
+{
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "emis_id", "school_level_id", "year", "registration_no", "year_established", "location_id", "telephone", "email", "school_type_id", "school_owner_id", "LOI_id__1", "LOI_id__2", "LOI_id__3", "share_premises", "distance_road", "stats_name", "stats_telephone", "HT_name", "HT_gender", "HT_telephone"],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				]
+            },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "school_infos", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "emis_id",
+							"year": "year",
+							"school_level_id": "school_level_id",
+							"head_gender_id": "HT_gender", 
+							"shared_building": "share_premises",
+							"school_type_id": "school_type_id",
+                            "distance_road": "distance_road",
+                            "registration_no": "registration_no",
+                            "year_established": "year_established",
+                            "location_id": "location_id",
+                            "school_owner_id": "school_owner_id",
+                            "telephone": "telephone",
+                            "email": "email",
+                            "loi_kiswahili": "LOI_id__1",
+                            "loi_english": "LOI_id__2",
+                            "loi_other": "LOI_id__3",
+                            "stats_name": "stats_name",
+                            "stats_telephone": "stats_telephone",
+                            "HT_name": "HT_name",
+                            "HT_telephone": "HT_telephone"
+						}, 
+                        "types": { 
+                            "distance_road": "double",
+                            "registration_no": "string",
+                            "telephone": "string",
+                            "email": "string",
+                            "stats_name": "string",
+                            "stats_telephone": "string",
+                            "HT_name": "string",
+                            "HT_telephone": "string"
+                        }
+                        
+					}
+				}
+            ]
+        }
+   ]
+}
+

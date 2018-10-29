@@ -1,0 +1,48 @@
+{
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "education_level_id", "toilet_id", "qty" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"copyColumns": [ "emis_id", "year", "education_level_id" ],
+						"valueColumn": "qty",
+						"constColumnHeaders": [ "toilet_id" ],
+						"constColumnValues" : {
+                            "toilets_boys_qty": "0",
+                            "toilets_girls_qty": "1",
+                            "toilets_teachers_qty": "2",
+                            "toilets_unisex_qty": "3",
+                            "toilets_teachersandstudents_qty": "4",
+                            "toilets_disability_qty": "5"
+						}
+					}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "toilets", 
+						"withDelete": false, 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"education_level_id": "education_level_id", 
+                            "toilet_id": "toilet_id",
+                            "qty": "qty" 
+						}
+					}
+				}
+			]
+		}
+	]
+}

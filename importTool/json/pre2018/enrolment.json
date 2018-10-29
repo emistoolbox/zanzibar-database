@@ -1,0 +1,75 @@
+{
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "grade", "gender", "level", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ENROL by GRADE.csv", "consts": { "level": "0"} },  
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ENROL by GRADE.csv", "consts": { "level": "1"} },  
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ENROL by GRADE.csv", "consts": { "level": "2"} }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "level" ],
+						"constColumnHeaders": [ "gender", "grade" ],
+						"constColumnValues" : {
+"Nur_Male": "0,1",
+"Nur_Female": "1,1",
+"Jun_Male": "0,2",
+"Jun_Female": "1,2",
+"Sen_Male": "0,3",
+"Sen_Female": "1,3",
+"STD_1_Male": "0,4",
+"STD_1_Female": "1,4",
+"STD_2_Male": "0,5",
+"STD_2_Female": "1,5",
+"STD_3_Male": "0,6",
+"STD_3_Female": "1,6",
+"STD_4_Male": "0,7",
+"STD_4_Female": "1,7",
+"STD_5_Male": "0,8",
+"STD_5_Female": "1,8",
+"STD_6_Male": "0,9",
+"STD_6_Female": "1,9",
+"STD_7_Male": "0,10",
+"STD_7_Female": "1,10",
+"F1_Male": "0,11",
+"F1_Female": "1,11",
+"F2_Male": "0,12",
+"F2_Female": "1,12",
+"F3_Male": "0,13",
+"F3_Female": "1,13",
+"F4_Male": "0,14",
+"F4_Female": "1,14",
+"F5_Male": "0,15",
+"F5_Female": "1,15",
+"F6_Male": "0,16",
+"F6_Female": "1,16"
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "enrolments", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"education_level_id": "level",
+							"grade_id": "grade",
+							"gender_id": "gender",
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}

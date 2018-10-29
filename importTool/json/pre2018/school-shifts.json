@@ -1,0 +1,46 @@
+{	
+    "lookups": { 
+        "EducationLevelLookup": { "type": "simple", "mappings": "PPE=0,PRIMARY=1,SECONDARY=2"}
+    }, 
+	"processes": [
+        {
+            "source": {
+                "type": "union", 
+                "headers": [ "School_EMIS_ID", "Year", "Education Level",  "shifts"],
+                "sources": [
+                    { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ABSTRACT.csv"},  
+                    { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv"},  
+                    { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv"}
+                ],
+                "filters": [
+                    { 
+                        "type": "rename", 
+                        "renames": { 
+                            "SHIFT_": "shifts", 
+                            "SHIFT": "shifts", 
+                            "NUMBER OF SHIFTS_": "shifts" 
+                        }
+                    }, 
+                    { "type": "map", "mappings": { "Education Level" : "EducationLevelLookup" } }
+                ]
+            },
+            "pipes": [
+                {
+                    "target": {
+                        "type": "sql", 
+                        "table": "school_shifts", 
+                        "notNullColumns": [ "School_EMIS_ID", "Year" ], 
+                        "withDelete": true, 
+                        "columns": 
+                        {
+                            "emis_id": "School_EMIS_ID",
+                            "year": "Year",
+                            "education_level_id": "Education Level",
+                            "shifts": "shifts"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

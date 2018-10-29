@@ -1,0 +1,85 @@
+{
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "level", "furniture", "count", "Seats" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ABSTRACT.csv", "consts": { "level": "0" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv", "consts": { "level": "2" } }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "level", "Seats" ],
+						"constColumnHeaders": [ "furniture" ],
+						"skipIfEmpty": true, 
+						"constColumnValues" : {
+							"Furniture_1 Pupil Desk": "0", 
+							"Furniture_2 Pupils Desk": "1", 
+							"Furniture_3 Pupils Desk": "2", 
+							"Furniture_Chairs": "3", 
+							"Furniture_1 Pupil Table": "4", 
+							"Furniture_2 Pupils Table": "5",
+							"1 Pupil Desk": "0", 
+							"2 Pupils Desk": "1", 
+							"3 Pupils Desk": "2", 
+							"Chairs": "3", 
+							"1 Pupil Table": "4", 
+							"2 Pupils Table": "5"
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "furnitures", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"education_level_id": "level",
+							"furniture_id": "furniture",
+							"qty": "count"
+						}
+					}
+				}
+			]
+		},
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "level", "furniture", "count", "Seats", "Functional Seats" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ABSTRACT.csv", "consts": { "level": "0" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv", "consts": { "level": "2" } }
+				], 
+				"filters": [
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "seats", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"education_level_id": "level",
+							"qty": "Seats", 
+                            "qty_functional": "Functional Seats"
+						}
+					}
+				}
+			]
+		}
+	] 
+}

@@ -1,0 +1,47 @@
+{	
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "District", "Year", "Age", "Gender", "Count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/POPULATION.csv", "consts": { "level": "2"} }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "Count",
+						"copyColumns": [ "District", "Age" ],
+						"constColumnHeaders": [ "Gender", "Year"],
+						"constColumnValues" : {
+                            "2015_Male": "0,2015", 
+                            "2015_Female": "1,2015", 
+                            "2016_Male": "0,2016", 
+                            "2016_Female": "1,2016", 
+                            "2017_Male": "0,2017", 
+                            "2017_Female": "1,2017"
+                        }
+                    }
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "population", 
+						"notNullColumns": [ "District", "Year", "Age", "Gender" ], 
+						"withDelete": true, 
+						"columns": {
+							"district_id": "District",
+							"year": "Year",
+                            "age": "Age", 
+                            "gender_id": "Gender",
+                            "qty": "Count"
+						}
+					}
+				}
+			]
+		}
+	]
+}
+

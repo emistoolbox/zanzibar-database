@@ -1,0 +1,23 @@
+{
+	processes: [
+        {
+			"source": { "type" : "csv", "filename": "../../data/EMIS_ZANZIBAR/Shehia-District-Region Codes.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "shehias", 
+						"withDelete": true, 
+						"columns": {
+							"shehia_id": "Unique Shehia ID", 
+							"shehia_name": "Shehia",
+							"district_id": "Unique District ID"
+						}, 
+						"types": { "shehia_name": "string"}
+					}
+				}
+			]
+		}
+
+	]
+}

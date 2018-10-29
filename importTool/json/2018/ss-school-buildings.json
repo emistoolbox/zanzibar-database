@@ -1,0 +1,49 @@
+{
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "education_level_id", "building_id", "qty" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"copyColumns": [ "emis_id", "year", "education_level_id" ],
+						"valueColumn": "qty",
+						"constColumnHeaders": [ "building_id" ],
+						"constColumnValues" : {
+                            "buildings_id__0": "0",
+                            "buildings_id__1": "1",
+                            "buildings_id__2": "2",
+                            "buildings_id__3": "3",
+                            "buildings_id__4": "4",
+                            "buildings_id__5": "5",
+                            "buildings_id__6": "6"
+						}
+					}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "school_buildings", 
+						"withDelete": false, 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"education_level_id": "education_level_id", 
+                            "buildng_id": "building_id",
+                            "qty": "qty"
+						}
+					}
+				}
+			]
+		}
+	]
+}

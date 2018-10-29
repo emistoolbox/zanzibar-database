@@ -1,0 +1,48 @@
+{
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "education_level_id", "furniture_id", "qty" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"copyColumns": [ "emis_id", "year", "education_level_id" ],
+						"valueColumn": "qty",
+						"constColumnHeaders": [ "furniture_id" ],
+						"constColumnValues" : {
+                            "desk_1_seater": "0", 
+                            "desk_2_seater": "1", 
+                            "desk_3_seater": "2", 
+                            "chairs": "3", 
+                            "desk_1_student": "4", 
+                            "desk_2_student": "5" 
+						}
+					}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "furnitures", 
+						"withDelete": false, 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"education_level_id": "education_level_id", 
+                            "furniture_id": "furniture_id",
+                            "qty": "qty" 
+						}
+					}
+				}
+			]
+		}
+	]
+}

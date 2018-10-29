@@ -1,0 +1,72 @@
+{
+	"lookups": {
+		"tcs": {
+			"type": "file", 
+			"source": { "type" : "csv", "filename": "../../data/final/tcs.csv" },
+			"keyColumn": "tc_name",
+			"valueColumn": "tc_id"
+		},
+		"clusters": {
+			"type": "file", 
+			"source": { "type" : "csv", "filename": "../../data/final/clusters.csv" },
+			"keyColumn": "cluster_name",
+			"valueColumn": "cluster_id"
+		},
+		"districts": {
+			"type": "file", 
+			"source": { "type" : "csv", "filename": "../../data/final/districts.csv" },
+			"keyColumn": "district_name",
+			"valueColumn": "district_id"
+		}, 
+        "school-levels": { "type": "simple", "mappings": "Pre-Primary=0,Primary=1,Secondary=2,Basic=3" }, 
+        "school-types": { "type": "simple", "mappings": "Government=0,Private=1" }
+    },
+	"processes": [
+		{
+			"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/UNIQUE SCHOOL_LIST.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "schools_hierarchy", 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID", 
+							"district_id": "District_Name",
+							"tc_id": "TC_Name", 
+							
+							"school_name": "School_Name",
+							"school_level_id": "School Level", 
+							"school_type_id": "School Type"
+						},
+						"notNullColumns": [ "emis_id", "school_name", "District_Name"], 
+						"types": { "school_name": "string" }
+					},
+					"filters": [
+						{ "type": "map", "mappings": { "TC_Name": "tcs", "District_Name": "districts", "School Level": "school-levels", "School Type": "school-types" } }
+					]
+				}
+			]
+		}, 
+		{
+			"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/TCs-Cluster-School List.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "schools_cluster_hierarchy", 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"cluster_id": "TC Cluster"
+						},
+						"notNullColumns": [ "emis_id", "cluster_id"]
+					},
+					"filters": [
+						{ "type": "map", "mappings": { "TC Cluster": "clusters" } }
+					]
+				}
+			]
+		}
+	]
+}

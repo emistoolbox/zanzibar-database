@@ -1,0 +1,25 @@
+{	
+	"lookups": {},
+	"processes": [
+		{
+			"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/OPM SCHOOL DATA.csv" },  
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "school_positions", 
+						"notNullColumns": [ "School_EMIS_ID", "GPS_Longitude", "GPS_Latitude" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+                            "gis_long": "GPS_Longitude", 
+                            "gis_lat": "GPS_Latitude"
+						}, 
+                        "types": { "gis_long": "double", "gis_lat": "double" }
+					}
+				}
+			]
+		}
+	]
+}
+

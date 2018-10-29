@@ -1,0 +1,66 @@
+{
+	"lookups": {
+		"grades": { "type": "simple", "mappings": "Form IV=3,Form VI=4" }
+    },
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "exam_grade_id", "exam_subject_id", "score" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS FORM II SCORES.csv", "consts": { "exam_grade_id": "2" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS STD VI SCORE.csv",  "consts": { "exam_grade_id": "1" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS STD IV SCORE.csv",  "consts": { "exam_grade_id": "0" } } 
+                    
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "score",
+						"copyColumns": [ "School_EMIS_ID", "Year", "exam_grade_id"],
+						"constColumnHeaders": [ "exam_subject_id" ],
+						"constColumnValues" : {
+                            "ENG": "0", 
+                            "ENGLISH": "0", 
+                            "KISW": "1", 
+                            "KISWAHILI": "1", 
+                            "DINI": "2", 
+                            "KIAR": "3", 
+                            "GEOG": "4", 
+                            "CIVICS": "5", 
+                            "HIST": "6", 
+                            "CHEM": "7", 
+                            "PHY": "8", 
+                            "BIOL": "9", 
+                            "MATH": "10", 
+                            "URAIA": "11", 
+                            "SCIENCE": "12", 
+                            "ICT": "13", 
+                            "SAYANSI": "14",
+                            "HISABATI": "15"
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "exam_scores", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+                            "exam_grade_id": "exam_grade_id", 
+                            "exam_subject_id": "exam_subject_id", 
+							"score": "score",
+                            "max_score": "'100'"
+						}, 
+                        "types": { "score": "double" }
+					}
+				}
+			]
+		}
+	]
+}

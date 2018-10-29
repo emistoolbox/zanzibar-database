@@ -1,0 +1,37 @@
+{
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "education_level_id", "classrooms_inuse", "classrooms_notused", "clsrms_good_condition", "clsrms_major_repairs", "clrsms_new_construction" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				], 
+				"filters": [
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "classrooms", 
+						"withDelete": false, 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"education_level_id": "education_level_id", 
+                            "qty": "classrooms_inuse", 
+                            "classrooms_notused": "classrooms_notused", 
+                            "classrooms_good": "clsrms_good_condition", 
+                            "classrooms_major_repairs": "clsrms_major_repairs", 
+                            "classrooms_new_constructions": "clrsms_new_construction"
+						}
+					}
+				}
+			]
+		}
+	]
+}

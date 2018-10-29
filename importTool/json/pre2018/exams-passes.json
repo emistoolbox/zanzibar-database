@@ -1,0 +1,121 @@
+{
+	"lookups": {
+		"grades": { "type": "simple", "mappings": "Form IV=3,Form VI=4" }
+    },
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "exam_grade_id", "exam_level_id", "gender_id", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS FORM IV PASS-FAIL.csv",  "consts": { "exam_grade_id": "3" } },
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS FORM II PASS-FAIL.csv", "consts": { "exam_grade_id": "2" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS STD VI PASS-FAIL.csv",  "consts": { "exam_grade_id": "1" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS STD IV SAT.csv",  "consts": { "exam_grade_id": "0" } }                   
+				],
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "exam_grade_id"],
+						"constColumnHeaders": [ "exam_level_id", "gender_id" ],
+						"constColumnValues" : {
+                            "Sat_Female": "10,1", 
+                            "Sat_Male": "10,0", 
+                            "Passed_Female": "1,1", 
+                            "Passed_Male": "1,0", 
+                            "Failed_Female": "0,1", 
+                            "Failed_Male": "0,0",
+                            
+                            "Sat_female": "10,1", 
+                            "Sat_male": "10,0", 
+                            "Not sat_female": "11,1", 
+                            "Not sat_male": "11,0",
+
+                            "Superior_Female": "3,1", 
+                            "Superior_Male": "3,0", 
+                            "Excellent_Female": "2,1", 
+                            "Excellent_Male": "2,0",
+                            
+                            "Successful_Male": "1,0", 
+                            "Successful_Female": "1,1", 
+                            
+                            "Matriculated Form 5_Male": "12,0",
+                            "Matriculated Form 5_Female": "12,1", 
+                            "Matriculated FTC_Male": "13,0", 
+                            "Matriculated FTC_Female": "13,1" 
+
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "exam_passes", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+                            "exam_grade_id": "exam_grade_id", 
+                            "gender_id": "gender_id", 
+                            "exam_level_id": "exam_level_id", 
+							"qty": "count"
+						}
+					}
+				}
+			]
+		},
+        {
+            "source": { 
+                "type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "gender_id", "Grade", "exam_level_id", "count" ],
+				"sources": [
+                    { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS DIV FORMS IV&VI.csv" }
+                ],
+				"filters": [
+                    { "type": "map", "mappings": { "Grade": "grades" } },
+	                {
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "Grade"],
+						"constColumnHeaders": [ "exam_level_id", "gender_id" ],
+						"constColumnValues" : {
+                            "Sat_Female": "10,1", 
+                            "Sat_Male": "10,0", 
+                            "Pass_Female": "1,1", 
+                            "Pass_Male": "1,0", 
+                            "Div. 1_Male": "8,0", 
+                            "Div. 1_Female": "8,1", 
+                            "Div. 2_Male": "7,0", 
+                            "Div. 2_Female": "7,1", 
+                            "Div. 3_Male": "6,0", 
+                            "Div. 3_Female": "6,1", 
+                            "Div. 4_Male": "5,0", 
+                            "Div. 4_Female": "5,1" 
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "exam_passes", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+                            "exam_grade_id": "Grade", 
+                            "gender_id": "gender_id", 
+                            "exam_level_id": "exam_level_id", 
+							"qty": "count"
+						}
+					}
+				}
+			]
+        }
+	]
+}

@@ -1,0 +1,31 @@
+{
+ 	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "emis_id", "education_level_id", "year", "shifts_id"],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				]
+            }, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "school_shifts", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "emis_id",
+							"year": "year",
+							"education_level_id": "education_level_id",
+							"shifts": "shifts_id"
+						}
+					}
+				}
+			]
+		}
+    ]
+}

@@ -1,0 +1,94 @@
+{
+    "lookups": {
+ 		"EmisIdLookup": { 
+            "type": "file", 
+            "keyColumn": "interview__id", 
+            "valueColumn": "emis_id", 
+            "source": {
+                "type": "union", 
+                "headers": [ "interview__id", "emis_id" ], 
+                "sources": [
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+                ]
+            }
+        },  
+ 		"EducationLevelLookup": { 
+            "type": "file", 
+            "keyColumn": "interview__id", 
+            "valueColumn": "education_level_id", 
+            "source": {
+                "type": "union", 
+                "headers": [ "interview__id", "education_level_id" ], 
+                "sources": [
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+                ]
+            }
+        }, 
+ 		"YearLookup": { 
+            "type": "file", 
+            "keyColumn": "interview__id", 
+            "valueColumn": "year", 
+            "source": {
+                "type": "union", 
+                "headers": [ "interview__id", "year" ], 
+                "sources": [
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+                ]
+            }
+        }
+    },
+    
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "education_level_id", "teacher_age_id", "gender_id", "qty" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/r_teachers_duties_qty.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/r_teachers_duties_qty.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/r_teachers_duties_qty.tab" }
+				],
+				"filters": [
+                    { "type": "rename", "renames": { "r_teachers_duties_qty__id": "teacher_education_id", "r_teachers_duties__id": "teacher_duties_id" }},
+					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id", "education_level_id": "interview__id" } }, 
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup", "education_level_id": "EducationLevelLookup" }},
+					{
+						"type": "expand", 
+						"valueColumn": "qty",
+						"copyColumns": [ "emis_id", "year", "education_level_id", "teacher_education_id", "teacher_duties_id" ],
+						"constColumnHeaders": [ "gender_id" ],
+						"constColumnValues" : {
+							"male_duties_qty": "0",
+							"female_duties_qty": "1"
+						}
+					}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "teacher_duties", 
+						"withDelete": false, 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+                            "education_level_id": "education_level_id", 
+							"gender_id": "gender_id", 
+                            "teacher_education_id": "teacher_education_id", 
+                            "teacher_duties_id": "teacher_duties_id", 
+                            "qty": "qty"
+						}
+					}
+				}
+			]
+		}
+	]
+}

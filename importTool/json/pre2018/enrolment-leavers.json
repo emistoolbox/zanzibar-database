@@ -1,0 +1,49 @@
+{
+	"lookups": {
+		"levels": { "type": "simple", "mappings": "PPE=0,PRIMARY=1,SECONDARY=2" }
+    }, 
+    "processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "Education Level", "Gender", "Leaver", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SCHOOL LEAVING.csv" }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "Education Level" ],
+						"constColumnHeaders": [ "Leaver", "Gender" ],
+						"constColumnValues" : {
+                            "Leaving-Denominator_Male": "1,0",
+                            "Leaving-Denominator_Female": "1,1",
+                            "Leaving-Numerator_Male": "0,0",
+                            "Leaving-Numerator_Female": "0,1"
+						}
+					}, 
+					{ "type": "map", "mappings": { "Education Level": "levels" } }
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "enrolment_school_leavers", 
+						"notNullColumns": [ "School_EMIS_ID", "Year", "Education Level", "Gender", "Leaver" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"education_level_id": "Education Level",
+                            "leaver_id": "Leaver", 
+							"gender_id": "Gender",
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}

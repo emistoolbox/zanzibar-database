@@ -1,0 +1,112 @@
+{
+	processes: [
+		{
+			"source": { "type" : "csv", "filename": "../../data/final/nation.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "nation", 
+						"withDelete": true, 
+						"columns": {
+							"nation_id": "id", 
+							"nation_name": "name"
+						}, 
+						"types": { "nation_name": "string"}
+					}
+				}
+			]
+		}, 
+		{
+			"source": { "type" : "csv", "filename": "../../data/final/islands.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "islands", 
+						"withDelete": true, 
+						"columns": {
+							"island_id": "island_id", 
+							"island_name": "island_name",
+							"nation_id": "nation_id"
+						}, 
+						"types": { "island_name": "string"}
+					}
+				}
+			]
+		},
+		{
+			"source": { "type" : "csv", "filename": "../../data/final/regions.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "regions", 
+						"withDelete": true, 
+						"columns": {
+							"region_id": "region_id", 
+							"region_name": "region_name", 
+							"island_id": "island_id"
+						}, 
+						"types": { "region_name": "string"}
+					}
+				}
+			]
+		},
+		{
+			"source": { "type" : "csv", "filename": "../../data/final/districts.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "districts", 
+						"withDelete": true, 
+						"columns": {
+							"district_id": "district_id", 
+							"district_name": "district_name",
+							"region_id": "region_id"
+						}, 
+						"types": { "district_name": "string"}
+					}
+				}
+			]
+		},
+		{
+			"source": { "type" : "csv", "filename": "../../data/final/tcs.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "teacher_centers", 
+						"withDelete": true, 
+						"columns": {
+							"tc_id": "tc_id", 
+							"tc_name": "tc_name",
+							"region_id": "region_id"
+						}, 
+						"types": { "tc_name": "string"}
+					}
+				}
+			]
+		},
+        {
+			"source": { "type" : "csv", "filename": "../../data/final/clusters.csv" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "clusters", 
+						"withDelete": true, 
+						"columns": {
+							"cluster_id": "cluster_id", 
+							"cluster_name": "cluster_name",
+							"tc_id": "tc_id"
+						}, 
+						"types": { "cluster_name": "string"}
+					}
+				}
+			]
+		}
+
+	]
+}

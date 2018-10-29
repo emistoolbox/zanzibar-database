@@ -1,0 +1,61 @@
+{
+	"lookups": {
+		"grades" : {
+			"type": "simple", 
+			"mappings": "Nr=1,Jr=2,Sr=3,STD I=4,STD II=5,STD III=6,STD IV=7,STD V=8,STD VI=9,STD VII=10,FORM I=11,FORM II=12,FORM III=13,FORM IV=14,FORM V=15,FORM VI=16"
+		}
+	},
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "level", "gender", "age", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "level" ],
+						"constColumnHeaders": [ "gender", "age" ],
+						"constColumnValues" : {
+							"New Entrants by Age_Under 6 yr_Male": "0,5",
+							"New Entrants by Age_Under 6 yr_Female": "1,5",
+							"New Entrants by Age_Age 6_Male": "0,6",
+							"New Entrants by Age_Age 6_Female": "1,6",
+							"New Entrants by Age_Age 7_Male": "0,7",
+							"New Entrants by Age_Age 7_Female": "1,7",
+							"New Entrants by Age_Age 8_Male": "0,8",
+							"New Entrants by Age_Age 8_Female": "1,8",
+							"New Entrants by Age_Age 9_Male": "0,9",
+							"New Entrants by Age_Age 9_Female": "1,9",
+							"New Entrants by Age_Age 10_Male": "0,10",
+							"New Entrants by Age_Age 10_Female": "1,10",
+							"New Entrants by Age_age 10+_Male": "0,11",
+							"New Entrants by Age_age 10+_Female": "0,12"
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "enrolment_entrant_ages", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"education_level_id": "level",
+							"gender_id": "gender",
+							"age": "age", 
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}

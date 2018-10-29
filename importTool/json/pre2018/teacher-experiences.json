@@ -1,0 +1,57 @@
+{ 
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "level", "gender", "teacher_experience", "count"],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } },
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv", "consts": { "level": "2" } }
+				], 
+				"filters": [
+					{ "type": "rename", "matchRegex": "Teachers'", "replaceRegex": "Teacher" }, 
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "level" ],
+						"constColumnHeaders": [ "gender", "teacher_experience" ],
+						"constColumnValues" : {
+							"Teacher Experience_0 - 5_Male": "0,0", 
+							"Teacher Experience_0 - 5_Female": "1,0", 
+							"Teacher Experience_6 - 10_Male": "0,1", 
+							"Teacher Experience_6 - 10_Female": "1,1", 
+							"Teacher Experience_11 - 15_Male": "0,2", 
+							"Teacher Experience_11 - 15_Female": "1,2", 
+							"Teacher Experience_16 - 20_Male": "0,3", 
+							"Teacher Experience_16 - 20_Female": "1,3", 
+							"Teacher Experience_21 - 25_Male": "0,4", 
+							"Teacher Experience_21 - 25_Female": "1,4", 
+							"Teacher Experience_26 - 30_Male": "0,5", 
+							"Teacher Experience_26 - 30_Female": "1,5", 
+							"Teacher Experience_30+_Male": "0,6", 
+							"Teacher Experience_30+_Female": "1,6" 
+						}
+					}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "teacher_experiences", 
+						"withDelete": true, 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"columns": { 
+							"emis_id": "School_EMIS_ID",
+							"year": "Year", 
+							"education_level_id": "level", 
+							"gender_id": "gender", 
+							"experience_id": "teacher_experience", 
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}

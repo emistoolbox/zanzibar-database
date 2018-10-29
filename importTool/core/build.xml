@@ -1,0 +1,93 @@
+<!-- Build for unitlib jar -->
+<project name="zanzibar-import" default="compile" basedir="." >
+  <description>Zanzibar EMIS data import</description>
+
+  <property name="src" location="src"/>
+  <property name="lib" location="lib"/>
+  <property name="build" location="build"/>
+  <property name="classes" location="${build}/classes"/>
+  <property name="jar" location="jar"/>
+
+  <path id="path.compile">
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="path.test">
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+
+    <pathelement location="${build}/${ant.project.name}.jar"/>
+  </path>
+
+  <target name="clean">
+    <delete quiet="true" includeemptydirs="true">
+      <fileset dir="${classes}" includes="**/*"/>
+    </delete>
+
+    <mkdir dir="${classes}"/>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${jar}"/>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="${classes}"/>
+    <javac srcdir="${src}" destdir="${classes}" debug="on" source="1.8" target="1.8">
+      <classpath refid="path.compile"/>
+    </javac>
+  </target>
+
+  <target name="prepareJar" depends="compile">
+    <delete quiet="true">
+      <fileset dir="${jar}" includes="**/*.bak"/>
+      <fileset dir="${jar}" includes="**/*~"/>
+    </delete>
+  </target>
+
+  <target name="jar" depends="prepareJar">
+    <mkdir dir="${build}"/>
+    <jar destfile="${build}/${ant.project.name}.jar" manifest="${jar}/Manifest.mf">
+        <fileset dir="${classes}"/>
+        <fileset dir="${jar}">
+          <exclude name="**/Manifest.mf"/>
+        </fileset>
+    </jar>
+  </target>
+
+  <target name="run" depends="jar">
+      <java classname="es.jbauer.emis.zanzibar.ZanzibarImport">
+      <arg value="json/ss-enrol-qty.json"/>
+
+      <classpath>
+        <path refid="path.test"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="xls2csv" depends="jar">
+      <java fork="true" classname="es.jbauer.emis.tools.Xls2Csv">
+<!--      <arg value="..\..\data\EMIS_ZANZIBAR.xlsx"/>
+      <arg value="..\..\data\EMIS_ZANZIBAR_SCHOOLS.xlsx"/> -->
+      <arg value="\in\recalled\CC-259 DMUS Case 2.xlsx"/>
+      <jvmarg value="-Xmx4096m" />
+      <classpath>
+        <path refid="path.test"/>
+      </classpath>
+    </java> 
+  </target>
+
+  <target name="xlstocsv" depends="jar">
+      <java fork="true" classname="es.jbauer.emis.tools.Xls2Csv">
+      <arg value="${xlsfile}"/>
+      <jvmarg value="-Xmx4096m" />
+      <classpath>
+        <path refid="path.test"/>
+      </classpath>
+    </java> 
+  </target>
+
+  <target name="all" depends="clean,jar">
+  </target>
+</project>

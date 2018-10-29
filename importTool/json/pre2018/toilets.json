@@ -1,0 +1,95 @@
+{
+	"processes": [
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "level", "toilet", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ABSTRACT.csv", "consts": { "level": "0" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv", "consts": { "level": "2" } }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "level" ],
+						"constColumnHeaders": [ "toilet" ],
+						"constColumnValues" : {
+							"No. of TOILET__MALE": "0", 
+							"No. of TOILET__FEMALE": "1", 
+							"No. of TOILET__TEACHER": "2", 
+							"No. of TOILET__STUDENT UNISEX": "3", 
+							"No. of TOILET__PUPIL/ TEACHER": "4", 
+							"No. of TOILET__DISABLE": "5",
+                            "No. of TOILET_Male": "0",
+                            "No. of TOILET_Female": "1", 
+                            "No. of TOILET_TEACHER": "2", 
+                            "No. of TOILET_STUDENT UNISEX": "3", 
+                            "No. of TOILET_PUPIL/ TEACHER": "4", 
+                            "No. of TOILET_DISABLE": "5"
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "toilets", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"education_level_id": "level",
+							"toilet_id": "toilet",
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}, 
+		{
+			"source": {
+				"type": "union", 
+				"headers": [ "School_EMIS_ID", "Year", "level", "gender", "count" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ABSTRACT.csv", "consts": { "level": "0" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } }, 
+					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv", "consts": { "level": "2" } }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"valueColumn": "count",
+						"copyColumns": [ "School_EMIS_ID", "Year", "level" ],
+						"constColumnHeaders": [ "gender" ],
+						"constColumnValues" : {
+                            "Functional Boys Toilets": "0", 
+                            "Functional Girls Toilets": "1"
+						}
+					}
+				] 
+			}, 
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "toilets_gender", 
+						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"year": "Year",
+							"education_level_id": "level",
+							"gender_id": "gender",
+							"qty": "count"
+						}
+					}
+				}
+			]
+		}
+	]
+}
+

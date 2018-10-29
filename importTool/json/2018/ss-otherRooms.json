@@ -1,0 +1,52 @@
+{
+	"processes": [
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "education_level_id", "other_room_id", "qty" ],
+				"sources": [
+					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				], 
+				"filters": [
+					{
+						"type": "expand", 
+						"copyColumns": [ "emis_id", "year", "education_level_id" ],
+						"valueColumn": "qty",
+						"constColumnHeaders": [ "other_room_id" ],
+						"constColumnValues" : {
+                            "other_rooms_id__0": "0",
+                            "other_rooms_id__1": "1",
+                            "other_rooms_id__2": "2",
+                            "other_rooms_id__3": "3",
+                            "other_rooms_id__4": "4",
+                            "other_rooms_id__5": "5",
+                            "other_rooms_id__6": "6",
+                            "other_rooms_id__7": "7",
+                            "other_rooms_id__8": "8",
+                            "other_rooms_id__9": "9"
+						}
+					}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "other_rooms", 
+						"withDelete": false, 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"education_level_id": "education_level_id", 
+                            "other_room_id": "other_room_id",
+                            "qty": "qty"
+						}
+					}
+				}
+			]
+		}
+	]
+}
