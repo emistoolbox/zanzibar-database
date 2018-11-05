@@ -8,9 +8,9 @@
                 "type": "union", 
                 "headers": [ "interview__id", "emis_id" ], 
                 "sources": [
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
                 ]
             }
         },  
@@ -22,9 +22,9 @@
                 "type": "union", 
                 "headers": [ "interview__id", "education_level_id" ], 
                 "sources": [
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
                 ]
             }
         }, 
@@ -36,12 +36,12 @@
                 "type": "union", 
                 "headers": [ "interview__id", "year" ], 
                 "sources": [
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
                 ]
             }
-        }
+-        }
     },
     
 	"processes": [
@@ -50,9 +50,39 @@
 				"type": "union", 
 				"headers": [ "emis_id", "year", "grade_id", "shift_id", "streams_qty"],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/r_streams_qty.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/r_streams_qty.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/r_streams_qty.tab" }
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/r_streams_qty.tab" }
+				], 
+				"filters": [
+                    { "type": "rename", "renames": { "r_streams_qty__id": "grade_id" }},
+					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id" } }, 
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup" }}
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "streams", 
+						"deleteWhere": "year = 2018", 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"grade_id": "grade_id", 
+							"shift_id": "'1'", 
+							"qty": "streams_qty"
+						}
+					}
+				}
+			]
+		},
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "grade_id", "shift_id", "streams_qty"],
+				"sources": [
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/r_streams_qty.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/SECONDARY/r_streams_qty.tab" }
 				], 
 				"filters": [
                     { "type": "rename", "renames": { "r_streams_qty__id": "shift_id", "r_streams_summary__id": "grade_id" }},
@@ -65,7 +95,7 @@
 					"target": { 
 						"type": "sql", 
 						"table": "streams", 
-						"withDelete": false, 
+						"deleteWhere": "year = 2018", 
 						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
 						"columns": { 
 							"emis_id": "emis_id",

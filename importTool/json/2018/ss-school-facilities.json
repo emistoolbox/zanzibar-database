@@ -61,7 +61,6 @@
 				"filters": [
 					{ "type": "map", "mappings": { "*": "MissingValue" }}
                 ]
-				
 			},
 			"pipes": [
 				{

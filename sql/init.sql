@@ -225,19 +225,6 @@ CREATE TABLE classrooms
 -- 
 -- TEACHERS
 --
-DROP TABLE IF EXISTS teacher_educations; 
-CREATE TABLE teacher_educations
-(
-    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-    emis_id INTEGER NOT NULL, 
-    year INTEGER NOT NULL, 
-    gender_id TINYINT NOT NULL,
-    education_level_id TINYINT NOT NULL, 
-    qualified TINYINT NOT NULL, 
-    teacher_education_id TINYINT NOT NULL, 
-    qty INTEGER NOT NULL
-); 
-
 DROP TABLE IF EXISTS teacher_attritions; 
 CREATE TABLE teacher_attritions
 (
@@ -1217,7 +1204,7 @@ CREATE TABLE school_power
     emis_id INTEGER NOT NULL, 
     year INTEGER NOT NULL, 
     education_level_id TINYINT NOT NULL, 
-    power_id TINYINT NOT NULL
+    power_id TINYINT
 ); 
 
 DROP TABLE IF EXISTS lookup_power; 
@@ -1546,11 +1533,12 @@ CREATE TABLE teacher_educations
     emis_id INTEGER NOT NULL, 
     year INTEGER NOT NULL, 
     education_level_id TINYINT NOT NULL, 
+    gender_id TINYINT NOT NULL,
 
     teacher_education_id TINYINT NOT NULL, 
-    teacher_specialization_id TINYINT NOT NULL,
+    teacher_specialization_id TINYINT,
     teacher_trained_id TINYINT NOT NULL, 
-    gender_id TINYINT NOT NULL,
+
     qty INTEGER NOT NULL
 );
 

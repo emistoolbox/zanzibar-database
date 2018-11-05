@@ -8,13 +8,14 @@
 				"type": "union", 
 				"headers": [ "emis_id", "year", "education_level_id", "water_id", "qty" ],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
 				], 
                 "filters": [
                     { "type": "joinCols", "columns": "water_type_id__1,water_type_id__2,water_type_id__3,water_type_id__4,water_type_id__5", "resultColumn": "water_id" },
-                    { "type": "map", "mappings": { "water_id" : "WaterId" } }
+                    { "type": "map", "mappings": { "water_id" : "WaterId" } },
+					{ "type": "skip", "columns": [ "water_id" ] }
                 ]
 			},
 			"pipes": [
@@ -22,7 +23,7 @@
 					"target": { 
 						"type": "sql", 
 						"table": "school_water", 
-						"withDelete": false, 
+						"deleteWhere": "year = 2018", 
 						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
 						"columns": { 
 							"emis_id": "emis_id",

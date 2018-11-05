@@ -1,21 +1,30 @@
 {
+    "lookups": {
+        "MissingValue": {
+			"type": "simple", 
+			"mappings": "-999999999=(NULL)"
+        }
+    },
 	"processes": [
 		{
 			"source": { 
 				"type": "union", 
 				"headers": [ "emis_id", "year", "education_level_id", "electricity_id", "qty" ],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
-				]
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				], 
+				"filters": [
+					{ "type": "map", "mappings": { "*": "MissingValue" }}
+                ]
 			},
 			"pipes": [
 				{
 					"target": { 
 						"type": "sql", 
 						"table": "school_power", 
-						"withDelete": false, 
+						"deleteWhere": "year = 2018", 
 						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
 						"columns": { 
 							"emis_id": "emis_id",

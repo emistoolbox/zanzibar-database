@@ -3,23 +3,19 @@
 		{
 			"source": {
 				"type": "union", 
-				"headers": [ "District", "Year", "Age", "Gender", "Count" ],
+				"headers": [ "district_id", "year", "age", "Gender", "Count" ],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/POPULATION.csv", "consts": { "level": "2"} }
+					{ "type": "xls", "filename": "${DATA}/Population Projections/Zanzibar_pop_formatted.xlsx", "worksheet": "pop_datatable" }
 				], 
 				"filters": [
 					{
 						"type": "expand", 
 						"valueColumn": "Count",
-						"copyColumns": [ "District", "Age" ],
-						"constColumnHeaders": [ "Gender", "Year"],
+						"copyColumns": [ "district_id", "age", "year"],
+						"constColumnHeaders": [ "Gender" ],
 						"constColumnValues" : {
-                            "2015_Male": "0,2015", 
-                            "2015_Female": "1,2015", 
-                            "2016_Male": "0,2016", 
-                            "2016_Female": "1,2016", 
-                            "2017_Male": "0,2017", 
-                            "2017_Female": "1,2017"
+                            "male": "0", 
+                            "female": "1"
                         }
                     }
 				] 
@@ -32,9 +28,9 @@
 						"notNullColumns": [ "District", "Year", "Age", "Gender" ], 
 						"withDelete": true, 
 						"columns": {
-							"district_id": "District",
-							"year": "Year",
-                            "age": "Age", 
+							"district_id": "district_id",
+							"year": "year",
+                            "age": "age", 
                             "gender_id": "Gender",
                             "qty": "Count"
 						}
