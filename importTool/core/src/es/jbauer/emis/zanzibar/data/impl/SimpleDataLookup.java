@@ -22,11 +22,11 @@ public class SimpleDataLookup implements DataLookup
 				if (pos == -1)
 					continue; 
 				
-				map.put(mapping.substring(0, pos), mapping.substring(pos + 1)); 
+				map.put(mapping.substring(0, pos).toLowerCase(), mapping.substring(pos + 1)); 
 			}
 		}
 
-		return map.get(key);
+		return map.get(key.toLowerCase());
 	}
 
 }

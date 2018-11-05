@@ -1,19 +1,13 @@
 package es.jbauer.emis.zanzibar;
 
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
 
 import es.jbauer.emis.zanzibar.data.DataLookup;
-import es.jbauer.emis.zanzibar.data.DataPipe;
 import es.jbauer.emis.zanzibar.data.DataProcess;
-import es.jbauer.lib.tables.TableRow;
-import es.jbauer.lib.tables.TableRowHandler;
-import es.jbauer.lib.tables.TableUtils;
-import es.jbauer.lib.tables.impl.StringTableRow;
 
 public class ZanzibarImport 
 {

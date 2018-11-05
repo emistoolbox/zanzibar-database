@@ -7,7 +7,7 @@
 				"sources": [
 					{
 						"type": "filtered", 
-						"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ABSTRACT.csv", "consts": { "level": "0"} },
+						"source": { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "PPE ABSTRACT", "consts": { "level": "0" } },
 						"filters": [
 							{
 								"type": "expand", 

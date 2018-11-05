@@ -8,7 +8,7 @@
 				"type": "union", 
 				"headers": [ "School_EMIS_ID", "Year", "Education Level", "Gender", "Leaver", "count" ],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SCHOOL LEAVING.csv" }
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "SCHOOL LEAVING" }
 				], 
 				"filters": [
 					{

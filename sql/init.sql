@@ -166,6 +166,7 @@ CREATE TABLE enrolment_entrants_educations
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
     emis_id INTEGER NOT NULL, 
     year INTEGER NOT NULL, 
+    education_level_id TINYINT NOT NULL,
     gender_id TINYINT NOT NULL,
     educated TINYINT NOT NULL, 
     qty INTEGER NOT NULL
@@ -215,7 +216,10 @@ CREATE TABLE classrooms
 	year INTEGER NOT NULL, 
 	education_level_id TINYINT NOT NULL,
 	qty INTEGER NOT NULL, 
-    qty_functional INTEGER NOT NULL
+    classrooms_notused INTEGER,
+    classrooms_good INTEGER, 
+    classrooms_major_repairs INTEGER,
+    classrooms_new_constructions INTEGER
 ); 
 
 -- 
@@ -254,7 +258,7 @@ CREATE TABLE teacher_experiences
     year INTEGER NOT NULL, 
     education_level_id TINYINT NOT NULL, 
     gender_id TINYINT NOT NULL, 
-    experience_id TINYINT NOT NULL, 
+    teacher_experience_id TINYINT NOT NULL, 
     qty INTEGER NOT NULL
 );
 
@@ -758,12 +762,12 @@ CREATE TABLE school_facilities
     year INTEGER NOT NULL, 
     education_level_id TINYINT NOT NULL, 
 
-    hasWater TINYINT NOT NULL, 
-    hasPower TINYINT NOT NULL, 
-    hasLibrary TINYINT NOT NULL, 
-    hasLaboratory TINYINT NOT NULL, 
-    hasFeeding TINYINT NOT NULL, 
-    hasPlayground TINYINT NOT NULL
+    hasWater TINYINT, 
+    hasPower TINYINT, 
+    hasLibrary TINYINT, 
+    hasLaboratory TINYINT, 
+    hasFeeding TINYINT, 
+    hasPlayground TINYINT
 ); 
 
 DROP VIEW IF EXISTS facilities;
@@ -1153,22 +1157,22 @@ CREATE TABLE school_infos
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
     emis_id INTEGER NOT NULL, 
     year INTEGER NOT NULL, 
-    shared_building TINYINT NOT NULL, 
-    distance_road FLOAT NOT NULL,
-    registration_no VARCHAR(32) NOT NULL,
-    year_established INTEGER NOT NULL,
-    location_id TINYINT NOT NULL,
-    school_owner_id TINYINT NOT NULL,
-    telephone CHAR(12) NOT NULL,
-    email VARCHAR(64) NOT NULL,
-    loi_kiswahili TINYINT NOT NULL,
-    loi_english TINYINT NOT NULL,
-    loi_other TINYINT NOT NULL,
-    stats_name VARCHAR(100) NOT NULL,
-    stats_telephone CHAR(32) NOT NULL,
-    HT_name VARCHAR(100) NOT NULL,
-    head_gender_id TINYINT NOT NULL, 
-    HT_telephone CHAR(32) NOT NULL
+    shared_building TINYINT, 
+    distance_road FLOAT,
+    registration_no VARCHAR(32),
+    year_established INTEGER,
+    location_id TINYINT,
+    school_owner_id TINYINT,
+    telephone CHAR(12),
+    email VARCHAR(64),
+    loi_kiswahili TINYINT,
+    loi_english TINYINT,
+    loi_other TINYINT,
+    stats_name VARCHAR(100),
+    stats_telephone CHAR(32),
+    HT_name VARCHAR(100),
+    head_gender_id TINYINT, 
+    HT_telephone CHAR(32)
 ); 
 
 DROP TABLE IF EXISTS lookup_school_owner; 
@@ -1341,13 +1345,6 @@ INSERT INTO lookup_other_rooms VALUES
 (7, "Maabara"), 
 (8, "Karakana ya ufundi"), 
 (9, "Chumba cha jiografia"); 
----
---- Classrooms
---- 
-ALTER TABLE classrooms ADD COLUMN classrooms_notused INTEGER; 
-ALTER TABLE classrooms ADD COLUMN classrooms_good INTEGER; 
-ALTER TABLE classrooms ADD COLUMN classrooms_major_repairs INTEGER; 
-ALTER TABLE classrooms ADD COLUMN classroom_new_constructions INTEGER; 
 
 
 --

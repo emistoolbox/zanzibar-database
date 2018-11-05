@@ -34,8 +34,8 @@ public class GsonUtils
 	{
 		GsonBuilder builder = new GsonBuilder(); 
 
-		RuntimeTypeAdapterFactory<DataSource> dataSourceAdaptor = RuntimeTypeAdapterFactory.of(DataSource.class);
-		dataSourceAdaptor.registerSubtype(ExcelDataSource.class, "excel"); 
+		RuntimeTypeAdapterFactory<DataSource> dataSourceAdaptor = RuntimeTypeAdapterFactory.of(DataSource.class); 
+		dataSourceAdaptor.registerSubtype(ExcelDataSource.class, "xls"); 
 		dataSourceAdaptor.registerSubtype(CsvDataSource.class, "csv"); 
 		dataSourceAdaptor.registerSubtype(UnionDataSource.class, "union"); 
 		dataSourceAdaptor.registerSubtype(FilteredDataSource.class, "filtered");

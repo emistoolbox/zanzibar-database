@@ -8,10 +8,10 @@
 				"type": "union", 
 				"headers": [ "School_EMIS_ID", "Year", "exam_grade_id", "exam_level_id", "gender_id", "count" ],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS FORM IV PASS-FAIL.csv",  "consts": { "exam_grade_id": "3" } },
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS FORM II PASS-FAIL.csv", "consts": { "exam_grade_id": "2" } }, 
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS STD VI PASS-FAIL.csv",  "consts": { "exam_grade_id": "1" } }, 
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS STD IV SAT.csv",  "consts": { "exam_grade_id": "0" } }                   
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS FORM IV PASS-FAIL", "consts": { "exam_grade_id": "3" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS FORM II PASS-FAIL", "consts": { "exam_grade_id": "2" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS FORM II PASS-FAIL", "consts": { "exam_grade_id": "1" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS STD IV SAT", "consts": { "exam_grade_id": "0" } }
 				],
 				"filters": [
 					{
@@ -73,7 +73,7 @@
                 "type": "union", 
 				"headers": [ "School_EMIS_ID", "Year", "gender_id", "Grade", "exam_level_id", "count" ],
 				"sources": [
-                    { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS DIV FORMS IV&VI.csv" }
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS DIV FORMS IV&VI" }
                 ],
 				"filters": [
                     { "type": "map", "mappings": { "Grade": "grades" } },

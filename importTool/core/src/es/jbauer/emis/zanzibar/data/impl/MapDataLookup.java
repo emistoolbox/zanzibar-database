@@ -10,5 +10,5 @@ public class MapDataLookup implements DataLookup
 	
 	@Override
 	public String get(String key) 
-	{ return values.get(key); }
+	{ return values.get(key.toLowerCase()); }
 }

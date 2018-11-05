@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -16,30 +17,43 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class Xls2Csv 
 {
 	public static final void main(String[] args)
-		throws Exception
+		throws IOException
 	{
 		for (String arg : args)
 		{
 			int pos = arg.lastIndexOf(".");
-			File dir = new File(arg.substring(0, pos));
-			if (!dir.exists())
-				dir.mkdirs(); 
-			else if (!dir.isDirectory())
-			{
-				System.out.println(dir.getName() + " exists as file"); 
-				continue; 
-			}
+			String dir = arg.substring(0, pos);
 			
-			Workbook wb = WorkbookFactory.create(new File(arg)); 
-			for (int i = 0; i < wb.getNumberOfSheets(); i++) 
-				writeSheet(dir, wb.getSheetAt(i));  
+			extractExcel(dir, arg, ".csv"); 
 		}
 	}
 	
-	private static void writeSheet(File dir, Sheet sheet)
+	public static void extractExcel(String directoryPath, String filename, String ext)
 		throws IOException
 	{
-		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, sheet.getSheetName() + ".csv"))));
+		File dir = new File(directoryPath); 
+		if (!dir.exists())
+			dir.mkdirs();
+		else if (!dir.isDirectory())
+			throw new IllegalArgumentException("Cannot directory '" + directoryPath + "' - exists as file.");
+			
+		Workbook wb = null; 
+		try 
+		{ wb = WorkbookFactory.create(new File(filename)); }
+		catch (InvalidFormatException ex)
+		{ throw new IOException(ex); }
+		
+		for (int i = 0; i < wb.getNumberOfSheets(); i++) 
+			writeSheet(dir, wb.getSheetAt(i), ext);  
+	}
+	
+	private static void writeSheet(File dir, Sheet sheet, String ext)
+		throws IOException
+	{
+		if (!ext.startsWith("."))
+			ext = "." + ext; 
+		
+		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, sheet.getSheetName() + ext))));
 		for (int r = 0; r < sheet.getLastRowNum(); r++)
 		{
 			Row row = sheet.getRow(r); 

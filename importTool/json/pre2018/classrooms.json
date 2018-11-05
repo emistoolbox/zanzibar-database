@@ -4,7 +4,7 @@
 	},
 	"processes": [
 		{
-			"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/CLASSROOMS.csv" },			
+			"source": { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "CLASSROOMS" },			
 			"pipes": [
 				{
 					"target": { 
@@ -16,8 +16,7 @@
 							"emis_id": "School_EMIS_ID",
 							"year": "Year", 
 							"education_level_id": "level", 
-							"qty": "classrooms",
-                            "qty_functional": "Functional Classrooms"
+							"qty": "classrooms"
 						}
 					},
 					"filters": [

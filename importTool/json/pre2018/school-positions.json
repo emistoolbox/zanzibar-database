@@ -2,7 +2,7 @@
 	"lookups": {},
 	"processes": [
 		{
-			"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/OPM SCHOOL DATA.csv" },  
+			"source": { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "OPM SCHOOL DATA" },
 			"pipes": [
 				{
 					"target": {

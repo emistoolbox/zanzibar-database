@@ -8,7 +8,7 @@
                 "type": "union", 
                 "headers": [ "interview__id", "emis_id" ], 
                 "sources": [
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" }
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" }
                 ]
             }
         },  
@@ -20,7 +20,7 @@
                 "type": "union", 
                 "headers": [ "interview__id", "education_level_id" ], 
                 "sources": [
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" }
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" }
                 ]
             }
         }, 
@@ -32,7 +32,7 @@
                 "type": "union", 
                 "headers": [ "interview__id", "year" ], 
                 "sources": [
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" }
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" }
                 ]
             }
         }
@@ -44,7 +44,7 @@
 				"type": "union", 
 				"headers": [ "emis_id", "year", "grade_id", "gender_id", "age", "PPE_status_id", "qty"],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/r_entrants_qty.tab" }
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/r_entrants_qty.tab" }
                 ], 
 				"filters": [
                 
@@ -73,6 +73,7 @@
 						"columns": { 
 							"emis_id": "emis_id",
 							"year": "year", 
+                            "education_level_id": "'1'",
 							"gender_id": "gender_id", 
                             "age": "age",
                             "PPE_status_id" : "PPE_status_id",

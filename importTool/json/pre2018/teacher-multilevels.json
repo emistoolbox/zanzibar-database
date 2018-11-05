@@ -5,7 +5,7 @@
 				"type": "union", 
 				"headers": [ "School_EMIS_ID", "Year", "level", "gender", "teacher_qualification", "count"],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } }
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "PRI ABSTRACT", "consts": { "level": "1" } }
 				], 
 				"filters": [
 					{ "type": "rename", "renames": { "EMIS Code": "School_EMIS_ID" } },

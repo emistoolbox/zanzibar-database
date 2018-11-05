@@ -1,10 +1,7 @@
 package es.jbauer.emis.zanzibar.data.impl;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import es.jbauer.emis.zanzibar.data.DataLookup;
 import es.jbauer.emis.zanzibar.data.DataSource;
@@ -26,7 +23,7 @@ public class FileDataLookup implements DataLookup
 		if (values == null)
 			readValues(); 
 		
-		return values.get(key);
+		return values.get(key.toLowerCase());
 	}
 	
 	private void readValues()
@@ -39,7 +36,7 @@ public class FileDataLookup implements DataLookup
 			TableUtils.readAll(reader, new TableRowHandler() {
 				@Override
 				public void process(TableRow row, int rowIndex) throws Exception 
-				{ values.put(row.get(keyColumn), row.get(valueColumn)); }
+				{ values.put(row.get(keyColumn).toLowerCase(), row.get(valueColumn)); }
 			});
 		}
 		catch (Exception ex)

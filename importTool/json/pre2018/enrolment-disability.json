@@ -11,7 +11,7 @@
 				"type": "union", 
 				"headers": [ "EMIS ID", "Year", "Education Level", "gender", "disability", "count" ],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/DISABILITIES.csv" }
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "DISABILITIES" }
                 ],
 				"filters": [
 					{ "type": "map", "mappings": { "Education Level": "levels" }},

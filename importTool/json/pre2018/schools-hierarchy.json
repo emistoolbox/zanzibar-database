@@ -2,19 +2,19 @@
 	"lookups": {
 		"tcs": {
 			"type": "file", 
-			"source": { "type" : "csv", "filename": "../../data/final/tcs.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/tcs.csv" },
 			"keyColumn": "tc_name",
 			"valueColumn": "tc_id"
 		},
 		"clusters": {
 			"type": "file", 
-			"source": { "type" : "csv", "filename": "../../data/final/clusters.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/clusters.csv" },
 			"keyColumn": "cluster_name",
 			"valueColumn": "cluster_id"
 		},
 		"districts": {
 			"type": "file", 
-			"source": { "type" : "csv", "filename": "../../data/final/districts.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/districts.csv" },
 			"keyColumn": "district_name",
 			"valueColumn": "district_id"
 		}, 
@@ -23,7 +23,7 @@
     },
 	"processes": [
 		{
-			"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/UNIQUE SCHOOL_LIST.csv" },
+			"source": { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "UNIQUE SCHOOL_LIST" }, 
 			"pipes": [
 				{
 					"target": {
@@ -49,7 +49,7 @@
 			]
 		}, 
 		{
-			"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/TCs-Cluster-School List.csv" },
+			"source": { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "TCs-Cluster-School List" }, 
 			"pipes": [
 				{
 					"target": {

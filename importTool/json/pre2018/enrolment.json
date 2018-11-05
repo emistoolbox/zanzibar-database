@@ -5,9 +5,9 @@
 				"type": "union", 
 				"headers": [ "School_EMIS_ID", "Year", "grade", "gender", "level", "count" ],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PPE ENROL by GRADE.csv", "consts": { "level": "0"} },  
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ENROL by GRADE.csv", "consts": { "level": "1"} },  
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ENROL by GRADE.csv", "consts": { "level": "2"} }
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "PPE ENROL by GRADE", "consts": { "level": "0" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "PRI ENROL by GRADE", "consts": { "level": "1" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "SEC ENROL by GRADE", "consts": { "level": "2" } }
 				], 
 				"filters": [
 					{

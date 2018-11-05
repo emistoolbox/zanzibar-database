@@ -5,8 +5,8 @@
 				"type": "union", 
 				"headers": [ "School_EMIS_ID", "Year", "level", "gender", "teacher_experience", "count"],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1" } },
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv", "consts": { "level": "2" } }
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "PRI ABSTRACT", "consts": { "level": "1" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "SEC ABSTRACT", "consts": { "level": "2" } }
 				], 
 				"filters": [
 					{ "type": "rename", "matchRegex": "Teachers'", "replaceRegex": "Teacher" }, 
@@ -46,7 +46,7 @@
 							"year": "Year", 
 							"education_level_id": "level", 
 							"gender_id": "gender", 
-							"experience_id": "teacher_experience", 
+							"teacher_experience_id": "teacher_experience", 
 							"qty": "count"
 						}
 					}

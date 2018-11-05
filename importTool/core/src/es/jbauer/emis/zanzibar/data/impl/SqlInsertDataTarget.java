@@ -15,6 +15,7 @@ public class SqlInsertDataTarget extends DataTargetBase
 	
 	private String table; 
 	private boolean withDelete = false; 
+	private String deleteWhere = null;  
 	private Map<String, String> types; 
 	private Map<String, String> columns; 
 	private String[] skipIfColumnsEmpty; 
@@ -57,8 +58,13 @@ public class SqlInsertDataTarget extends DataTargetBase
 		String delim = ""; 
 		if (count == 0)
 		{
-			if (withDelete && first)
-				result.append("DELETE FROM ").append(table).append(";\n"); 
+			if (first)
+			{
+				if (withDelete)
+					result.append("DELETE FROM ").append(table).append(";\n"); 
+				else if (deleteWhere != null)
+					result.append("DELETE FROM ").append(table).append(" WHERE ").append(deleteWhere).append(";\n"); 
+			}
 			first = false; 
 			
 			result.append("INSERT INTO ").append(table).append(" ("); 

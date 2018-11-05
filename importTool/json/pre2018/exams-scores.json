@@ -8,10 +8,9 @@
 				"type": "union", 
 				"headers": [ "School_EMIS_ID", "Year", "exam_grade_id", "exam_subject_id", "score" ],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS FORM II SCORES.csv", "consts": { "exam_grade_id": "2" } }, 
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS STD VI SCORE.csv",  "consts": { "exam_grade_id": "1" } }, 
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/EXAMS STD IV SCORE.csv",  "consts": { "exam_grade_id": "0" } } 
-                    
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS FORM II SCORES", "consts": { "exam_grade_id": "2" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS STD VI SCORE", "consts": { "exam_grade_id": "1" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS STD IV SCORE", "consts": { "exam_grade_id": "0" } }
 				], 
 				"filters": [
 					{

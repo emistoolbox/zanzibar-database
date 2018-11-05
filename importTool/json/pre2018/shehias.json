@@ -1,7 +1,7 @@
 {
 	processes: [
         {
-			"source": { "type" : "csv", "filename": "../../data/EMIS_ZANZIBAR/Shehia-District-Region Codes.csv" },
+			"source": { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "Shehia-District-Region Codes" },
 			"pipes": [
 				{
 					"target": {

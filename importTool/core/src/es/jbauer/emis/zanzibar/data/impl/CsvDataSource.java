@@ -28,7 +28,7 @@ public class CsvDataSource extends DataSourceBase implements DataSource
 		config.put(CsvTableConfig.CSV_DELIMITER, "\t"); 
 		
 		CsvTableFactory csvFactory = new CsvTableFactory(); 
-		IOInput input = new IOFileInput(new File(filename)); 
+		IOInput input = new IOFileInput(new File(DataSourceBase.getPath(filename))); 
 		return adaptReader(csvFactory.create(input, config)); 
 	}
 }

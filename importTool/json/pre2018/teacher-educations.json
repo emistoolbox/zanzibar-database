@@ -6,7 +6,7 @@
 		}, 
 		"qualifications": {
 			"type": "simple", 
-			"mappings": "Qualified=1,Unqualified=0"
+			"mappings": "Qualified=1,Unqualified=2"
 		}
 	}, 
 	
@@ -16,7 +16,7 @@
 				"type": "union", 
 				"headers": [ "School_EMIS_ID", "Year", "level", "gender", "Qualification", "education", "count"], 
 				"sources": [
-					{ "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/TEACHERS BY EDUC.csv" }
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "TEACHERS BY EDUC" }
 				], 
 				"filters": [
 					{ "type": "rename", "renames": { "Education Level": "level" } },
@@ -55,8 +55,8 @@
 							"year": "Year", 
 							"education_level_id": "level", 
 							"gender_id": "gender", 
-							"qualified": "Qualification", 
-							"education_id": "education", 
+							"teacher_trained_id": "Qualification", 
+							"teacher_education_id": "education", 
 							"qty": "count"
 						}
 					}

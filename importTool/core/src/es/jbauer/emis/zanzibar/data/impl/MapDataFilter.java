@@ -16,6 +16,8 @@ import es.jbauer.lib.tables.impl.StringTableRow;
 
 public class MapDataFilter implements DataFilter, DataObject
 {
+	public static final String ALL_HEADERS = "*"; 
+	
 	private Map<String, DataLookup> lookups; 
 	private Map<String, String> mappings; 
 	private boolean logEmpty = false; 
@@ -27,12 +29,18 @@ public class MapDataFilter implements DataFilter, DataObject
 		if (lookups == null)
 			throw new IllegalArgumentException("Lookups are null"); 
 		
+		if (mappings.get(ALL_HEADERS) != null)
+			return mapAll(row, lookups.get(mappings.get(ALL_HEADERS))); 
+		
 		String[] headers = row.getHeaders(); 
 		String[] values = row.getValues(); 
-		
+
 		for (Map.Entry<String, String> mapping : mappings.entrySet())
 		{
 			String header = mapping.getKey(); 
+			if (ALL_HEADERS.equals(header))
+				continue; 
+			
 			int index = DataUtils.index(headers, header);
 			if (index == -1)
 				continue; 
@@ -53,6 +61,22 @@ public class MapDataFilter implements DataFilter, DataObject
 		
 		return Arrays.asList(DataUtils.updateSourceInfo(new StringTableRow(headers, values, null, null), row, null));
 	}
+	
+	private List<TableRow> mapAll(TableRow row, DataLookup lookup)
+	{
+		String[] headers = row.getHeaders(); 
+		String[] values = row.getValues(); 
+		
+		for (int i = 0; i < values.length; i++)
+		{
+			String newValue = lookup.get(values[i]); 
+			if (newValue != null)
+				values[i] = newValue.equals("(NULL)") ? null : newValue;
+		}
+		
+		return Arrays.asList(DataUtils.updateSourceInfo(new StringTableRow(headers, values, null, null), row, null));
+	}
+	
 
 	@Override
 	public void init(Map<String, DataLookup> lookups) 

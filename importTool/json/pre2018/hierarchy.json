@@ -1,7 +1,7 @@
 {
 	processes: [
 		{
-			"source": { "type" : "csv", "filename": "../../data/final/nation.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/nation.csv" },
 			"pipes": [
 				{
 					"target": {
@@ -18,7 +18,7 @@
 			]
 		}, 
 		{
-			"source": { "type" : "csv", "filename": "../../data/final/islands.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/islands.csv" },
 			"pipes": [
 				{
 					"target": {
@@ -36,7 +36,7 @@
 			]
 		},
 		{
-			"source": { "type" : "csv", "filename": "../../data/final/regions.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/regions.csv" },
 			"pipes": [
 				{
 					"target": {
@@ -54,7 +54,7 @@
 			]
 		},
 		{
-			"source": { "type" : "csv", "filename": "../../data/final/districts.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/districts.csv" },
 			"pipes": [
 				{
 					"target": {
@@ -72,7 +72,7 @@
 			]
 		},
 		{
-			"source": { "type" : "csv", "filename": "../../data/final/tcs.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/tcs.csv" },
 			"pipes": [
 				{
 					"target": {
@@ -90,7 +90,7 @@
 			]
 		},
         {
-			"source": { "type" : "csv", "filename": "../../data/final/clusters.csv" },
+			"source": { "type" : "csv", "filename": "${DATA}/pre2018/hierarchy/clusters.csv" },
 			"pipes": [
 				{
 					"target": {
