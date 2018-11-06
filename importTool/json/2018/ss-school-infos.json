@@ -1,14 +1,23 @@
 {
+    "lookups": {
+        "MissingValue": {
+			"type": "simple", 
+			"mappings": "-999999999=(NULL),##N/A##=(NULL)"
+        } 
+    },
 	"processes": [
 		{
 			"source": {
 				"type": "union", 
 				"headers": [ "emis_id", "school_level_id", "year", "registration_no", "year_established", "location_id", "telephone", "email", "school_type_id", "school_owner_id", "LOI_id__1", "LOI_id__2", "LOI_id__3", "share_premises", "distance_road", "stats_name", "stats_telephone", "HT_name", "HT_gender", "HT_telephone"],
 				"sources": [
-					{ "type": "csv", "filename": "../../data/Znz Data Files/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
-                    { "type": "csv", "filename": "../../data/Znz Data Files/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
-				]
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/Zanzibar MOEVT PRE-PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/PRIMARY/Zanzibar MOEVT PRIMARY ASC.tab" },
+                    { "type": "csv", "filename": "${DATA}/2018/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
+				],
+				"filters": [
+					{ "type": "map", "mappings": { "*": "MissingValue" }}
+                ]
             },
 			"pipes": [
 				{
@@ -16,14 +25,11 @@
 						"type": "sql", 
 						"table": "school_infos", 
 						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
-						"withDelete": true, 
+						"deleteWhere": "year = 2018", 
 						"columns": {
 							"emis_id": "emis_id",
 							"year": "year",
-							"school_level_id": "school_level_id",
-							"head_gender_id": "HT_gender", 
 							"shared_building": "share_premises",
-							"school_type_id": "school_type_id",
                             "distance_road": "distance_road",
                             "registration_no": "registration_no",
                             "year_established": "year_established",
@@ -37,6 +43,7 @@
                             "stats_name": "stats_name",
                             "stats_telephone": "stats_telephone",
                             "HT_name": "HT_name",
+							"head_gender_id": "HT_gender", 
                             "HT_telephone": "HT_telephone"
 						}, 
                         "types": { 

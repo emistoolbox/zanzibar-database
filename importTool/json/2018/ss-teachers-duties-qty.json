@@ -48,7 +48,7 @@
 		{
 			"source": { 
 				"type": "union", 
-				"headers": [ "emis_id", "year", "education_level_id", "teacher_age_id", "gender_id", "qty" ],
+				"headers": [ "emis_id", "year", "education_level_id", "teacher_education_id", "teacher_duties_id", "gender_id", "qty" ],
 				"sources": [
 					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/r_teachers_duties_qty.tab" },
                     { "type": "csv", "filename": "${DATA}/2018/PRIMARY/r_teachers_duties_qty.tab" },
