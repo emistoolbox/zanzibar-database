@@ -41,7 +41,7 @@
                     { "type": "csv", "filename": "${DATA}/2018/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
                 ]
             }
--        }
+        }
     },
     
 	"processes": [
@@ -53,9 +53,10 @@
 					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/r_streams_qty.tab" }
 				], 
 				"filters": [
-                    { "type": "rename", "renames": { "r_streams_qty__id": "grade_id" }},
+                    { "type": "rename", "renames": { "r_streams_qty__id": "grade_id", "streams_qty	interview__id": "streams_qty" }},
 					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id" } }, 
-					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup" }}
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup" }}, 
+                    { "type": "skip", "columns": ["streams_qty"], "emptyValues": ["(NULL)", "-999999999"] }
 				]
 			},
 			"pipes": [
@@ -87,7 +88,8 @@
 				"filters": [
                     { "type": "rename", "renames": { "r_streams_qty__id": "shift_id", "r_streams_summary__id": "grade_id" }},
 					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id" } }, 
-					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup" }}
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup" }},
+                    { "type": "skip", "columns": ["streams_qty"], "emptyValues": ["(NULL)", "-999999999"] }
 				]
 			},
 			"pipes": [
@@ -95,7 +97,7 @@
 					"target": { 
 						"type": "sql", 
 						"table": "streams", 
-						"deleteWhere": "year = 2018", 
+						"withDelete": false, 
 						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
 						"columns": { 
 							"emis_id": "emis_id",

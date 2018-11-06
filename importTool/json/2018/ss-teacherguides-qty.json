@@ -50,7 +50,47 @@
 				"type": "union", 
 				"headers": [ "emis_id", "year", "grade_id", "subject_id", "qty"],
 				"sources": [
-					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/r_teacherguides_qty.tab" },
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/r_teacherguides_qty.tab" }
+				], 
+				"filters": [
+                    { "type": "rename", "renames": { "r_teacherguides_qty__id": "subject_id" }},
+					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id" } }, 
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup" }}, 
+                    {
+						"type": "expand", 
+						"copyColumns": [ "emis_id", "year", "subject_id" ],
+						"valueColumn": "qty",
+						"constColumnHeaders": [ "grade_id" ],
+						"constColumnValues" : {
+                            "nursery_teacherguides_qty": "1",
+                            "junior_teacherguides_qty": "2"
+                        }
+                    }
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "teacher_guides", 
+						"deleteWhere": "year = 2018", 
+						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"grade_id": "grade_id", 
+							"subject_id": "subject_id", 
+							"qty": "qty"
+						}
+					}
+				}
+			]
+		},
+		{
+			"source": { 
+				"type": "union", 
+				"headers": [ "emis_id", "year", "grade_id", "subject_id", "qty"],
+				"sources": [
                     { "type": "csv", "filename": "${DATA}/2018/PRIMARY/r_teacherguides_qty.tab" },
                     { "type": "csv", "filename": "${DATA}/2018/SECONDARY/r_teacherguides_qty.tab" }
 				], 

@@ -48,9 +48,50 @@
 		{
 			"source": { 
 				"type": "union", 
+				"headers": [ "emis_id", "year", "grade_id", "subject_id", "qty"],
+				"sources": [
+					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/r_textbooks_qty.tab" }
+				], 
+				"filters": [
+                
+                    { "type": "rename", "renames": { "r_textbooks_qty__id": "subject_id" }},
+					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id" } }, 
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup" }},
+                    {
+						"type": "expand", 
+						"copyColumns": [ "emis_id", "year", "subject_id" ],
+						"valueColumn": "qty",
+						"constColumnHeaders": [ "grade_id" ],
+						"constColumnValues" : {
+                            "nursery_textbooks_qty": "1",
+                            "junior_textbooks_qty": "2"
+                        }
+                    }
+				]
+			},
+			"pipes": [
+				{
+					"target": { 
+						"type": "sql", 
+						"table": "textbooks", 
+						"deleteWhere": "year = 2018", 
+						"notNullColumns": [ "emis_id", "year", "grade_id", "subject_id" ], 
+						"columns": { 
+							"emis_id": "emis_id",
+							"year": "year", 
+							"grade_id": "grade_id", 
+							"subject_id": "subject_id", 
+							"qty": "qty"
+						}
+					}
+				}
+			]
+		},
+		{
+			"source": { 
+				"type": "union", 
 				"headers": [ "emis_id", "year", "grade_id", "subject_id", "textbooks_qty"],
 				"sources": [
-					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/r_textbooks_qty.tab" },
                     { "type": "csv", "filename": "${DATA}/2018/PRIMARY/r_textbooks_qty.tab" },
                     { "type": "csv", "filename": "${DATA}/2018/SECONDARY/r_textbooks_qty.tab" }
 				], 
@@ -66,7 +107,7 @@
 					"target": { 
 						"type": "sql", 
 						"table": "textbooks", 
-						"deleteWhere": "year = 2018", 
+						"withDelete": false, 
 						"notNullColumns": [ "emis_id", "year", "grade_id", "subject_id" ], 
 						"columns": { 
 							"emis_id": "emis_id",
