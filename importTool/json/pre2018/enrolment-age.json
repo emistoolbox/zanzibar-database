@@ -9,7 +9,7 @@
 		{
 			"source": {
 				"type": "union", 
-				"headers": [ "School_EMIS_ID", "Year", "Grade", "gender", "age", "count" ],
+				"headers": [ "School_EMIS_ID", "Year", "Grade", "gender", "age", "level", "count" ],
 				"sources": [
                     { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "PPE ENROL BY AGE", "consts": { "level": "0", "Grade": "Sr"} },
                     { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "PRI ENROL BY AGE", "consts": { "level": "1" } },
@@ -19,7 +19,7 @@
 					{
 						"type": "expand", 
 						"valueColumn": "count",
-						"copyColumns": [ "School_EMIS_ID", "Year", "Grade" ],
+						"copyColumns": [ "School_EMIS_ID", "Year", "Grade", "level" ],
 						"constColumnHeaders": [ "gender", "age"],
 						"constColumnValues" : {
 							"AGE 3_Male": "0,3", 
@@ -86,6 +86,7 @@
 						"columns": {
 							"emis_id": "School_EMIS_ID",
 							"year": "Year",
+                            "education_level_id": "level", 
 							"gender_id": "gender",
 							"grade_id": "Grade",
 							"age": "age", 

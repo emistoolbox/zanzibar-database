@@ -29,7 +29,7 @@ public class ExcelDataSource extends DataSourceBase implements DataSource
 		if (!cacheFile.exists() || cacheFile.lastModified() < xlsFile.lastModified())
 		{
 			System.out.println("-- Extracting Excel data.");
-			Xls2Csv.extractExcel(getCacheDirectory(), DataSourceBase.getPath(filename), ".tsv");
+			Xls2Csv.extractExcel(getCacheDirectory(), DataSourceBase.getPath(filename), ".tab");
 			System.out.println("-- Data extracted.");
 		}
 
@@ -60,5 +60,5 @@ public class ExcelDataSource extends DataSourceBase implements DataSource
 	}
 	
 	private String getCacheFile()
-	{ return getCacheDirectory() + "/" + worksheet + ".tsv"; }
+	{ return getCacheDirectory() + "/" + worksheet + ".tab"; }
 }

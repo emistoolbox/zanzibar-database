@@ -74,7 +74,7 @@
 				{
 					"target": { 
 						"type": "sql", 
-						"table": "teacher_educations", 
+						"table": "teacher_educations_ss", 
 						"deleteWhere": "year = 2018", 
 						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
 						"columns": { 

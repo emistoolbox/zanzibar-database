@@ -16,7 +16,7 @@
 				{
 					"target": { 
 						"type": "sql", 
-						"table": "classrooms", 
+						"table": "classrooms_ss", 
 						"deleteWhere": "year = 2018", 
 						"notNullColumns": [ "emis_id", "year", "education_level_id" ], 
 						"columns": { 

@@ -155,10 +155,42 @@ CREATE TABLE enrolment_ages
     emis_id INTEGER NOT NULL, 
     year INTEGER NOT NULL, 
     age TINYINT NOT NULL, 
+    education_level_id TINYINT NOT NULL,
     grade_id TINYINT NOT NULL, 
     gender_id TINYINT NOT NULL, 
     qty INTEGER NOT NULL
 ); 
+
+DROP TABLE IF EXISTS enrolment_ages_ss; 
+CREATE TABLE enrolment_ages_ss
+(
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+    emis_id INTEGER NOT NULL, 
+    year INTEGER NOT NULL, 
+    age TINYINT NOT NULL, 
+    education_level_id TINYINT NOT NULL,
+    grade_id TINYINT NOT NULL, 
+    gender_id TINYINT NOT NULL, 
+    qty INTEGER NOT NULL
+); 
+
+DROP VIEW IF EXISTS enrolment_without_repeaters_items; 
+CREATE VIEW enrolment_without_repeaters_items AS 
+SELECT emis_id, year, grade_id, gender_id, qty
+FROM enrolment_ages
+UNION
+SELECT emis_id, year, grade_id, gender_id, -1 * qty as qty 
+FROM enrolment_repeaters; 
+
+DROP VIEW IF EXISTS enrolment_without_repeaters; 
+CREATE VIEW enrolment_without_repeaters AS 
+SELECT emis_id, year, grade_id, gender_id, sum(qty) as qty 
+FROM enrolment_without_repeaters_items
+GROUP BY emis_id, year, grade_id, gender_id; 
+
+DROP VIEW IF EXISTS withSurveySolutionData; 
+CREATE VIEW withSurveySolutionData AS 
+SELECT emis_id, year FROM enrolment_ages_ss WHERE qty > 0 GROUP BY emis_id, year; 
 
 DROP TABLE IF EXISTS enrolment_entrants_educations; 
 CREATE TABLE enrolment_entrants_educations 
@@ -210,6 +242,20 @@ INSERT INTO lookup_disabilities VALUES
 -- (source DATASET_BAJETI)
 DROP TABLE IF EXISTS classrooms; 
 CREATE TABLE classrooms
+(
+	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+	emis_id INTEGER NOT NULL, 
+	year INTEGER NOT NULL, 
+	education_level_id TINYINT NOT NULL,
+	qty INTEGER NOT NULL, 
+    classrooms_notused INTEGER,
+    classrooms_good INTEGER, 
+    classrooms_major_repairs INTEGER,
+    classrooms_new_constructions INTEGER
+); 
+
+DROP TABLE IF EXISTS classrooms_ss; 
+CREATE TABLE classrooms_ss
 (
 	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 	emis_id INTEGER NOT NULL, 
@@ -337,6 +383,16 @@ CREATE TABLE toilets
 	toilet_id TINYINT NOT NULL, 
 	qty INTEGER NOT NULL
 );	
+
+DROP VIEW IF EXISTS toilets_functional; 
+CREATE VIEW toilets_functional AS 
+(SELECT emis_id, year, education_level_id, 0 as gender_id, sum(qty) as qty FROM toilets
+WHERE toilet_id IN (0, 2, 4, 5)
+GROUP BY emis_id, year, education_level_id)
+UNION 
+(SELECT emis_id, year, education_level_id, 1 as gender_id, sum(qty) as qty FROM toilets
+WHERE toilet_id IN (1, 3, 4, 5)
+GROUP BY emis_id, year, education_level_id); 
 
 DROP TABLE IF EXISTS toilets_gender; 
 CREATE TABLE toilets_gender
@@ -678,7 +734,7 @@ GROUP BY emis_id, year, gender_id, exam_grade_id;
 DROP VIEW IF EXISTS enrolment_by_level; 
 CREATE VIEW enrolment_by_level AS
 SELECT emis_id, year, education_level_id, gender_id, SUM(qty) as qty 
-FROM enrolments
+FROM enrolment_ages
 GROUP BY emis_id, year, education_level_id, gender_id; 
 
 DROP VIEW IF EXISTS enrolment_repeaters_by_level;
@@ -1528,6 +1584,22 @@ INSERT INTO lookup_teacher_trained VALUES
 -- 
 DROP TABLE IF EXISTS teacher_educations; 
 CREATE TABLE teacher_educations
+(
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+    emis_id INTEGER NOT NULL, 
+    year INTEGER NOT NULL, 
+    education_level_id TINYINT NOT NULL, 
+    gender_id TINYINT NOT NULL,
+
+    teacher_education_id TINYINT NOT NULL, 
+    teacher_specialization_id TINYINT,
+    teacher_trained_id TINYINT NOT NULL, 
+
+    qty INTEGER NOT NULL
+);
+
+DROP TABLE IF EXISTS teacher_educations_ss; 
+CREATE TABLE teacher_educations_ss
 (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
     emis_id INTEGER NOT NULL, 

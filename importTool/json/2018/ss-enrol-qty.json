@@ -48,7 +48,7 @@
 		{
 			"source": { 
 				"type": "union", 
-				"headers": [ "emis_id", "year", "age", "grade_id", "gender_id", "qty"],
+				"headers": [ "emis_id", "year", "age", "education_level_id", "grade_id", "gender_id", "qty"],
 				"sources": [
 					{ "type": "csv", "filename": "${DATA}/2018/PRE-PRIMARY/r_enrol_qty.tab" },
                     { "type": "csv", "filename": "${DATA}/2018/PRIMARY/r_enrol_qty.tab" },
@@ -57,11 +57,11 @@
 				"filters": [
                 
                     { "type": "rename", "renames": { "r_enrol__id": "age", "r_enrol_qty__id": "grade_id" }},
-					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id" } }, 
-					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup" }},
+					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id", "education_level_id": "interview__id"  } }, 
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup", "education_level_id": "EducationLevelLookup"  }},
 					{
 						"type": "expand", 
-						"copyColumns": [ "emis_id", "year", "grade_id", "age" ],
+						"copyColumns": [ "emis_id", "year", "grade_id", "education_level_id", "age" ],
 						"valueColumn": "qty",
 						"constColumnHeaders": [ "gender_id" ],
 						"constColumnValues" : {
@@ -75,13 +75,14 @@
 				{
 					"target": { 
 						"type": "sql", 
-						"table": "enrolment_ages", 
+						"table": "enrolment_ages_ss", 
 						"deleteWhere": "year = 2018", 
 						"notNullColumns": [ "emis_id", "year", "age", "gender_id" ], 
 						"columns": { 
 							"emis_id": "emis_id",
 							"year": "year", 
 							"age": "age", 
+                            "education_level_id": "education_level_id", 
 							"grade_id": "grade_id", 
 							"gender_id": "gender_id", 
 							"qty": "qty"
