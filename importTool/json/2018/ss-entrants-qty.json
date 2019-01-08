@@ -67,7 +67,7 @@
 				{
 					"target": { 
 						"type": "sql", 
-						"table": "enrolment_entrants", 
+						"table": "enrolment_entrants_post2017", 
 						"withDelete": false, 
 						"notNullColumns": [ "emis_id", "year" ], 
 						"columns": { 

@@ -1,0 +1,21 @@
+{
+	"processes": [
+		{
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Nation" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "nation", 
+						"withDelete": true, 
+						"columns": {
+							"nation_id": "nation_id", 
+							"nation_name": "nation"
+						}, 
+						"types": { "nation_name": "string"}
+					}
+				}
+			]
+		}
+	]
+}

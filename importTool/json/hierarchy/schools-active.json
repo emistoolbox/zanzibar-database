@@ -1,0 +1,29 @@
+{
+	"processes": [
+        {
+			"source": { 
+                "type": "union", 
+                "headers": [ "School_EMIS_ID", "year", "active" ],
+                "sources": [ { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Schools_Active" } ], 
+                "filters": [
+                    { "type": "skip", "columns": ["year"], "emptyValues": ["2019"] }
+				]
+            },
+
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "schools_active", 
+						"withDelete": true, 
+						"columns": {
+                            "emis_id": "School_EMIS_ID",
+                            "year": "year", 
+                            "isActive": "active" 
+                        }
+					}
+				}
+			]
+		}
+	]
+}

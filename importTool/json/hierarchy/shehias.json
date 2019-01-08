@@ -1,0 +1,22 @@
+{
+	"processes": [
+        {
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Shehias" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "shehias", 
+						"withDelete": true, 
+						"columns": {
+							"shehia_id": "shehia_id", 
+							"shehia_name": "shehia_name",
+							"ward_id": "ward_id"
+						}, 
+						"types": { "shehia_name": "string"}
+					}
+				}
+			]
+		}
+	]
+}

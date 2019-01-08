@@ -1,0 +1,22 @@
+{
+	"processes": [
+		{
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Regions" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "regions", 
+						"withDelete": true, 
+						"columns": {
+							"region_id": "region_id", 
+							"region_name": "region_name", 
+							"island_id": "island_id"
+						}, 
+						"types": { "region_name": "string"}
+					}
+				}
+			]
+		}
+    ]
+}

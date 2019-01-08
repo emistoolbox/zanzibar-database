@@ -33,7 +33,7 @@
 				{
 					"target": {
 						"type": "sql", 
-						"table": "enrolment_entrants_educations", 
+						"table": "enrolment_entrants_educations_pre2018", 
 						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
 						"withDelete": true, 
 						"columns": {

@@ -1,0 +1,22 @@
+{
+	"processes": [
+        {
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Wards" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "wards", 
+						"withDelete": true, 
+						"columns": {
+							"ward_id": "ward_id",
+							"ward_name": "ward_name",
+							"constituency_id": "constituency_id"
+						}, 
+						"types": { "ward_name": "string"}
+					}
+				}
+			]
+		}
+	]
+}

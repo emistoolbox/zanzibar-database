@@ -1,0 +1,22 @@
+{
+	"processes": [
+		{
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Islands" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "islands", 
+						"withDelete": true, 
+						"columns": {
+							"island_id": "island_id", 
+							"island_name": "island_name",
+							"nation_id": "nation"
+						}, 
+						"types": { "island_name": "string"}
+					}
+				}
+			]
+		}
+    ]
+}

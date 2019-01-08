@@ -54,7 +54,7 @@ public class Xls2Csv
 			ext = "." + ext; 
 		
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, sheet.getSheetName() + ext))));
-		for (int r = 0; r < sheet.getLastRowNum(); r++)
+		for (int r = 0; r <= sheet.getLastRowNum(); r++)
 		{
 			Row row = sheet.getRow(r); 
 			String delim = ""; 

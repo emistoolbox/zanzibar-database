@@ -1,0 +1,29 @@
+{
+	"processes": [
+        {
+			"source": { 
+                "type": "union", 
+                "headers": [ "School_EMIS_ID", "cluster_id" ],
+                "sources": [ { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Schools_hierarchy" } ], 
+                "filters": [
+                    { "type": "skip", "columns": ["cluster_id"]}
+				]
+            },
+            
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "schools_cluster_hierarchy", 
+						"notNullColumns": [ "cluster_id" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"cluster_id": "cluster_id"
+						}
+					}
+				}
+			]
+		}
+	]
+}

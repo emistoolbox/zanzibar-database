@@ -1,0 +1,29 @@
+{
+	"processes": [
+        {
+			"source": { 
+                "type": "union", 
+                "headers": [ "School_EMIS_ID", "shehia_id" ],
+                "sources": [ { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Schools_hierarchy" } ], 
+                "filters": [
+                    { "type": "skip", "columns": ["shehia_id"]}
+				]
+            },
+            
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "schools_shehia_hierarchy", 
+						"notNullColumns": [ "shehia_id" ], 
+						"withDelete": true, 
+						"columns": {
+							"emis_id": "School_EMIS_ID",
+							"shehia_id": "shehia_id"
+						}
+					}
+				}
+			]
+		}
+	]
+}

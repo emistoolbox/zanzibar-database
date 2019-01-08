@@ -21,7 +21,8 @@
                             "NUMBER OF SHIFTS_": "shifts" 
                         }
                     }, 
-                    { "type": "map", "mappings": { "Education Level" : "EducationLevelLookup" } }
+                    { "type": "map", "mappings": { "Education Level" : "EducationLevelLookup" } },
+                    { "type": "skip", "columns": ["Education Level"]}
                 ]
             },
             "pipes": [
@@ -29,7 +30,7 @@
                     "target": {
                         "type": "sql", 
                         "table": "school_shifts", 
-                        "notNullColumns": [ "School_EMIS_ID", "Year" ], 
+                        "notNullColumns": [ "School_EMIS_ID", "Year", "Education Level" ], 
                         "withDelete": true, 
                         "columns": 
                         {

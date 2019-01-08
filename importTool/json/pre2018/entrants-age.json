@@ -42,7 +42,7 @@
 				{
 					"target": {
 						"type": "sql", 
-						"table": "enrolment_entrant_ages", 
+						"table": "enrolment_entrants_ages_pre2018", 
 						"notNullColumns": [ "School_EMIS_ID", "Year" ], 
 						"withDelete": true, 
 						"columns": {

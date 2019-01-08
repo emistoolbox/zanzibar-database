@@ -1,6 +1,22 @@
 --   
 -- HIERARCHY
 --
+DROP TABLE IF EXISTS wards; 
+CREATE TABLE wards
+(
+	ward_id INTEGER NOT NULL, 
+	ward_name VARCHAR(100) NOT NULL, 
+	constituency_id INTEGER NOT NULL
+); 
+
+DROP TABLE IF EXISTS constituencies; 
+CREATE TABLE constituencies
+(
+	constituency_id INTEGER NOT NULL, 
+	constituency_name VARCHAR(100) NOT NULL, 
+	district_id INTEGER NOT NULL
+);
+
 DROP TABLE IF EXISTS school_positions; 
 CREATE TABLE school_positions
 (
@@ -9,19 +25,22 @@ CREATE TABLE school_positions
     gis_lat FLOAT NOT NULL
 ); 
 
-DROP TABLE IF EXISTS schools_hierarchy; 
-CREATE TABLE schools_hierarchy
+DROP TABLE IF EXISTS schools; 
+CREATE TABLE schools
 (
     emis_id INTEGER NOT NULL, 
-
-    district_id INTEGER NOT NULL, 
-    tc_id INTEGER,
-    shehia_id INTEGER, 
 
     school_name VARCHAR(100) NOT NULL,
     school_level_id TINYINT, 
     school_type_id TINYINT
 ); 
+
+DROP TABLE IF EXISTS schools_shehia_hierarchy; 
+CREATE TABLE schools_shehia_hierarchy
+(
+    emis_id INTEGER NOT NULL, 
+    shehia_id INTEGER NOT NULL
+);
 
 DROP TABLE IF EXISTS schools_cluster_hierarchy; 
 CREATE TABLE schools_cluster_hierarchy
@@ -54,7 +73,7 @@ CREATE TABLE teacher_centers
 (
 	tc_id INTEGER NOT NULL, 
 	tc_name VARCHAR(100) NOT NULL, 
-	region_id INTEGER NOT NULL
+	island_id INTEGER NOT NULL
 ); 
 
 DROP TABLE IF EXISTS clusters; 
@@ -70,7 +89,7 @@ CREATE TABLE shehias
 (
 	shehia_id INTEGER NOT NULL, 
 	shehia_name VARCHAR(100) NOT NULL, 
-	district_id INTEGER NOT NULL
+	ward_id INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS regions; 
@@ -136,8 +155,21 @@ CREATE TABLE enrolment_repeaters
     qty INTEGER NOT NULL
 );
 
-DROP TABLE IF EXISTS enrolment_entrant_ages; 
-CREATE TABLE enrolment_entrant_ages 
+DROP TABLE if exists enrolment_entrants_post2017;
+CREATE TABLE enrolment_entrants_post2017 
+(
+  id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  emis_id int(11) NOT NULL,
+  year int(11) NOT NULL,
+  gender_id tinyint(4) NOT NULL,
+  education_level_id tinyint(4) NOT NULL,
+  age tinyint(4) NOT NULL,
+  PPE_status_id tinyint(4) NOT NULL,
+  qty int(11) NOT NULL
+); 
+
+DROP TABLE IF EXISTS enrolment_entrants_ages_pre2018; 
+CREATE TABLE enrolment_entrants_ages_pre2018
 (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
     emis_id INTEGER NOT NULL, 
@@ -147,6 +179,36 @@ CREATE TABLE enrolment_entrant_ages
     age TINYINT NOT NULL, 
     qty INTEGER NOT NULL
 );
+
+DROP TABLE IF EXISTS enrolment_entrants_educations_pre2018; 
+CREATE TABLE enrolment_entrants_educations_pre2018
+(
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+    emis_id INTEGER NOT NULL, 
+    year INTEGER NOT NULL, 
+    education_level_id TINYINT NOT NULL,
+    gender_id TINYINT NOT NULL,
+    educated TINYINT NOT NULL, 
+    qty INTEGER NOT NULL
+); 
+
+DROP VIEW IF EXISTS enrolment_entrants_ages; 
+CREATE VIEW enrolment_entrants_ages
+AS
+SELECT emis_id, year, education_level_id, gender_id, age, qty FROM enrolment_entrants_ages_pre2018
+UNION
+SELECT emis_id, year, education_level_id, gender_id, age, SUM(qty) as qty 
+FROM enrolment_entrants_post2017
+GROUP BY emis_id, year, education_level_id, gender_id, age; 
+
+DROP VIEW IF EXISTS enrolment_entrants_educations; 
+CREATE VIEW enrolment_entrants_educations
+AS
+SELECT emis_id, year, education_level_Id, gender_id, IF(educated, 1, 2) as ppe_status, qty FROM enrolment_entrants_educations_pre2018
+UNION 
+SELECT emis_id, year, education_level_Id, gender_id, PPE_status_id as ppe_status, SUM(qty) as qty 
+FROM enrolment_entrants_post2017 
+GROUP BY emis_id, year, education_level_Id, gender_id, PPE_status_id;
 
 DROP TABLE IF EXISTS enrolment_ages; 
 CREATE TABLE enrolment_ages
@@ -191,18 +253,6 @@ GROUP BY emis_id, year, grade_id, gender_id;
 DROP VIEW IF EXISTS withSurveySolutionData; 
 CREATE VIEW withSurveySolutionData AS 
 SELECT emis_id, year FROM enrolment_ages_ss WHERE qty > 0 GROUP BY emis_id, year; 
-
-DROP TABLE IF EXISTS enrolment_entrants_educations; 
-CREATE TABLE enrolment_entrants_educations 
-(
-    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-    emis_id INTEGER NOT NULL, 
-    year INTEGER NOT NULL, 
-    education_level_id TINYINT NOT NULL,
-    gender_id TINYINT NOT NULL,
-    educated TINYINT NOT NULL, 
-    qty INTEGER NOT NULL
-); 
 
 DROP TABLE IF EXISTS enrolment_disabilities_pre2018; 
 CREATE TABLE enrolment_disabilities_pre2018
@@ -537,41 +587,44 @@ DROP TABLE IF EXISTS lookup_education_levels;
 CREATE TABLE lookup_education_levels
 (
 education_level_id TINYINT NOT NULL PRIMARY KEY, 
-education_level_name CHAR(16) NOT NULL
+education_level_name CHAR(16) NOT NULL, 
+min_age TINYINT NOT NULL, 
+max_age TINYINT NOT NULL
 ); 
 
 INSERT INTO lookup_education_levels VALUES
-(0, 'Pre-Primary'), 
-(1, 'Primary'), 
-(2, 'Secondary'); 
+(0, 'Pre-Primary', 4, 5), 
+(1, 'Primary', 6, 11), 
+(2, 'Secondary', 12, 18); 
 
 DROP TABLE IF EXISTS lookup_grades; 
 CREATE TABLE lookup_grades
 (
 	grade_id TINYINT NOT NULL PRIMARY KEY, 
 	grade_name CHAR(16) NOT NULL, 
-	education_level_id TINYINT NOT NULL
+	education_level_id TINYINT NOT NULL, 
+    age TINYINT NOT NULL
 ); 
 
 INSERT INTO lookup_grades VALUES
-(1, 'Nr', 0), 
-(2, 'Jr', 0), 
-(3, 'Sr', 0), 
+(1, 'Nr', 0, 3), 
+(2, 'Jr', 0, 4), 
+(3, 'Sr', 0, 5), 
 
-(4, 'Std I', 1), 
-(5, 'Std II', 1), 
-(6, 'Std III', 1), 
-(7, 'Std IV', 1), 
-(8, 'Std V', 1), 
-(9, 'Std VI', 1), 
-(10, 'Std VII', 1), 
+(4, 'Std I', 1, 6), 
+(5, 'Std II', 1, 7), 
+(6, 'Std III', 1, 8), 
+(7, 'Std IV', 1, 9), 
+(8, 'Std V', 1, 10), 
+(9, 'Std VI', 1, 11), 
+(10, 'Std VII', 1, 12), 
 
-(11, 'Form I', 2), 
-(12, 'Form II', 2), 
-(13, 'Form III', 2), 
-(14, 'Form IV', 2), 
-(15, 'Form V', 2), 
-(16, 'Form VI', 2);
+(11, 'Form I', 2, 12), 
+(12, 'Form II', 2, 13), 
+(13, 'Form III', 2, 14), 
+(14, 'Form IV', 2, 15), 
+(15, 'Form V', 2, 16), 
+(16, 'Form VI', 2, 17);
 
 DROP TABLE IF EXISTS lookup_teacher_educations; 
 CREATE TABLE lookup_teacher_educations
@@ -689,25 +742,40 @@ INSERT INTO lookup_exam_subjects VALUES
 (14, "SAYANSI"), 
 (15, "HISABATI");
 
+DROP TABLE IF EXISTS schools_active;
+CREATE TABLE schools_active
+(
+	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+	emis_id INTEGER NOT NULL, 
+	year INTEGER NOT NULL, 
+    isActive BOOLEAN NOT NULL
+); 
+
 DROP VIEW IF EXISTS schools_active_by_level; 
 CREATE VIEW schools_active_by_level AS 
-SELECT emis_id, year, education_level_id, 1 isActive 
+SELECT emis_id, year, e.education_level_id, 1 as isActive 
 FROM enrolment_ages e 
 INNER JOIN lookup_grades g ON g.grade_id = e.grade_id 
 WHERE qty > 0
-GROUP BY emis_id, year, education_level_id; 
+GROUP BY emis_id, year, e.education_level_id; 
 
-DROP VIEW IF EXISTS schools_active; 
-CREATE VIEW schools_active AS 
-SELECT emis_id, year, 1 isActive 
-FROM schools_active_by_level
-GROUP BY emis_id, year; 
+DROP VIEW IF EXISTS schools_by_year; 
+CREATE VIEW schools_by_year AS 
+SELECT a.emis_id as emis_id, year, school_name, school_type_id, h.school_level_id
+FROM schools h, schools_active a
+WHERE h.emis_id = a.emis_id AND isActive = 1; 
 
-DROP VIEW IF EXISTS schools_hierarchy_by_year ; 
-CREATE VIEW schools_hierarchy_by_year AS 
-SELECT a.emis_id as emis_id, year, district_id, tc_id, shehia_id, school_name, school_type_id, h.school_level_id
-FROM schools_hierarchy h, schools_active a
-WHERE h.emis_id = a.emis_id; 
+DROP VIEW IF EXISTS schools_shehia_hierarchy_by_year;
+CREATE VIEW schools_shehia_hierarchy_by_year AS 
+SELECT a.emis_id as emis_id, year, shehia_id
+FROM schools_shehia_hierarchy s, schools_active a
+WHERE s.emis_id = a.emis_id AND isActive = 1; 
+
+DROP VIEW IF EXISTS schools_cluster_hierarchy_by_year;
+CREATE VIEW schools_cluster_hierarchy_by_year AS 
+SELECT a.emis_id as emis_id, year, cluster_id
+FROM schools_cluster_hierarchy c, schools_active a
+WHERE c.emis_id = a.emis_id AND isActive = 1; 
 
 DROP VIEW IF EXISTS exam_attendance; 
 CREATE VIEW exam_attendance AS 
@@ -790,9 +858,9 @@ GROUP BY f.emis_id, f.year, f.education_level_id;
 
 DROP VIEW IF EXISTS seats_functional; 
 CREATE VIEW seats_functional AS 
-SELECT s.emis_id, s.year, s.education_level_id, seats, CASE WHEN shifts IS NULL THEN seats ELSE shifts * seats END as seats_functional
+SELECT s.emis_id, s.year, s.education_level_id, seats, CASE WHEN shifts IS NULL OR shifts = 0 THEN seats ELSE shifts * seats END as seats_functional
 FROM seats s
-LEFT JOIN school_shifts i ON s.emis_id = i.emis_id AND s.education_level_id = i.education_level_id AND s.year = i.year;
+LEFT JOIN school_shifts i ON s.emis_id = i.emis_id AND s.education_level_id = i.education_level_id AND s.year = i.year; 
 
 --
 -- Facilities
@@ -841,7 +909,7 @@ GROUP BY district_Id, year, gender_id
 UNION
 SELECT district_id, year, gender_id, 2 as education_level_id, sum(qty) as qty 
 FROM population 
-WHERE age in (12, 13, 14, 15) 
+WHERE age in (12, 13, 14, 15, 16, 17, 18) 
 GROUP BY district_Id, year, gender_id;
 
 DROP VIEW IF EXISTS enrolment_net; 
@@ -858,12 +926,12 @@ GROUP BY emis_id, year, gender_id
 UNION
 SELECT emis_id, year, gender_id, 2 as education_level_id, sum(qty) as qty 
 FROM enrolment_ages
-WHERE age in (12, 13, 14, 15) 
+WHERE age in (12, 13, 14, 15, 16, 17, 18) 
 GROUP BY emis_id, year, gender_id;
 
--------------------------------------------------
+-- **********************************
 -- New Tables Oct 2018
--------------------------------------------------
+-- **********************************
 DROP TABLE if exists enrolment_disabilities_post2017; 
 CREATE TABLE enrolment_disabilities_post2017
 (
@@ -970,7 +1038,7 @@ INSERT INTO lookup_revenues VALUES
 (10, "Michango mengine");
 
 
-DROP TABLE if exists lookup_othertlms;
+DROP TABLE if exists lookup_other_tlms;
 CREATE TABLE lookup_other_tlms
 (
     other_tlms_id TINYINT NOT NULL PRIMARY KEY, 
@@ -1113,7 +1181,7 @@ INSERT INTO lookup_teacher_duties VALUES
 (10, "Mengineyo");
 
 
-DROP TABLE if exists teacher_duties;
+DROP TABLE IF EXISTS teacher_duties;
 CREATE TABLE teacher_duties
 (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
@@ -1126,22 +1194,11 @@ CREATE TABLE teacher_duties
     qty integer NOT NULL
 );
 
-CREATE TABLE `enrolment_entrants` 
+DROP TABLE IF EXISTS lookup_ppe_status; 
+CREATE TABLE lookup_ppe_status 
 (
-  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `emis_id` int(11) NOT NULL,
-  `year` int(11) NOT NULL,
-  `gender_id` tinyint(4) NOT NULL,
-  `education_level_id` tinyint(4) NOT NULL,
-  `age` tinyint(4) NOT NULL,
-  `PPE_status_id` tinyint(4) NOT NULL,
-  `qty` int(11) NOT NULL
-); 
-
-CREATE TABLE `lookup_ppe_status` 
-(
-  `ppe_status_id` tinyint(4) NOT NULL,
-  `ppe_status` char(32) NOT NULL
+  ppe_status_id tinyint(4) NOT NULL,
+  ppe_status char(32) NOT NULL
 ); 
 
 DELETE FROM lookup_ppe_status; 
@@ -1150,10 +1207,10 @@ INSERT INTO lookup_ppe_status VALUES
 (2, "Without PPE"); 
     
 DROP Table IF EXISTS lookup_teacher_age;
-CREATE TABLE `lookup_teacher_age` 
+CREATE TABLE lookup_teacher_age 
 (
-  `teacher_age_id` tinyint(4) NOT NULL,
-  `teacher_age` char(32) NOT NULL
+  teacher_age_id tinyint(4) NOT NULL,
+  teacher_age char(32) NOT NULL
 ); 
 
 DELETE FROM lookup_teacher_age; 
@@ -1247,9 +1304,9 @@ INSERT INTO lookup_location VALUES
 (2, "Rural")
 ; 
 
-----------
+-- *******
 -- jorg --
-----------
+-- *******
 --
 -- Power
 --
@@ -1626,3 +1683,47 @@ INSERT INTO lookup_teacher_specialization VALUES
 (1, "Sanaa"), 
 (2, "Sayansi"), 
 (3, "Mchanganyiko"); 
+
+DROP TABLE IF EXISTS lookup_age_type; 
+CREATE TABLE lookup_age_type
+(
+	age_type_id TINYINT NOT NULL PRIMARY KEY, 
+	age_type_name CHAR(32) NOT NULL
+); 
+DELETE FROM lookup_age_type; 
+INSERT INTO lookup_age_type VALUES
+(0, "Under age"),
+(1, "Correct age"), 
+(2, "Over age"); 
+
+DROP VIEW IF EXISTS enrolment_age_type_by_grade; 
+CREATE VIEW enrolment_age_type_by_grade AS 
+SELECT emis_id, year, e.grade_id as grade_id, gender_id, IF(e.age < g.age, 0, IF(e.age > g.age, 2, 1)) as age_type, sum(qty) as qty
+FROM enrolment_ages e
+INNER JOIN lookup_grades g ON g.grade_id = e.grade_id
+GROUP BY emis_id, year, grade_id, gender_id, age_type
+HAVING qty > 0; 
+
+DROP VIEW IF EXISTS enrolment_age_type_by_level; 
+CREATE VIEW enrolment_age_type_by_level AS 
+SELECT emis_id, year, e.education_level_id as education_level_id, gender_id, IF(e.age < l.min_age, 0, IF(e.age > l.max_age, 2, 1)) as age_type, sum(qty) as qty
+FROM enrolment_ages e
+INNER JOIN lookup_education_levels l ON l.education_level_id = e.education_level_id
+GROUP BY emis_id, year, education_level_id, gender_id, age_type
+HAVING qty > 0; 
+
+DROP VIEW IF EXISTS enrolment_ss_age_type_by_grade; 
+CREATE VIEW enrolment_ss_age_type_by_grade AS 
+SELECT emis_id, year, e.grade_id as grade_id, gender_id, IF(e.age < g.age, 0, IF(e.age > g.age, 2, 1)) as age_type, sum(qty) as qty
+FROM enrolment_ages_ss e
+INNER JOIN lookup_grades g ON g.grade_id = e.grade_id
+GROUP BY emis_id, year, grade_id, gender_id, age_type
+HAVING qty > 0; 
+
+DROP VIEW IF EXISTS enrolment_ss_age_type_by_level; 
+CREATE VIEW enrolment_ss_age_type_by_level AS 
+SELECT emis_id, year, e.education_level_id as education_level_id, gender_id, IF(e.age < l.min_age, 0, IF(e.age > l.max_age, 2, 1)) as age_type, sum(qty) as qty
+FROM enrolment_ages_ss e
+INNER JOIN lookup_education_levels l ON l.education_level_id = e.education_level_id
+GROUP BY emis_id, year, education_level_id, gender_id, age_type
+HAVING qty > 0; 

@@ -1,0 +1,23 @@
+{
+	"processes": [
+        {
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Clusters" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "clusters", 
+						"withDelete": true, 
+						"columns": {
+							"cluster_id": "cluster_id", 
+							"cluster_name": "cluster_name",
+							"tc_id": "tc_id"
+						}, 
+						"types": { "cluster_name": "string"}
+					}
+				}
+			]
+		}
+
+	]
+}

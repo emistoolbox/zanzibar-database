@@ -1,0 +1,23 @@
+{
+	"processes": [
+        {
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Schools_Info" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "schools", 
+						"withDelete": true, 
+						"columns": {
+                            "emis_id": "School_EMIS_ID",
+                            "school_name": "School_Name", 
+                            "school_type_id": "school_type_id", 
+                            "school_level_id": "school_level_id"
+                        }, 
+						"types": { "school_name": "string"}
+					}
+				}
+			]
+		}
+	]
+}

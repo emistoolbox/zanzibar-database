@@ -1,0 +1,22 @@
+{
+	"processes": [
+		{
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "TCs" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "teacher_centers", 
+						"withDelete": true, 
+						"columns": {
+							"tc_id": "tc_id", 
+							"tc_name": "tc_name",
+							"island_id": "island_id"
+						}, 
+						"types": { "tc_name": "string"}
+					}
+				}
+			]
+		}
+    ]
+}

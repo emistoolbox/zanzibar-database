@@ -1,0 +1,22 @@
+{
+	"processes": [
+        {
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Constituency" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "constituencies", 
+						"withDelete": true, 
+						"columns": {
+							"constituency_name": "constituency",
+							"constituency_id": "constituency_id",
+							"district_id": "district_id"
+						}, 
+						"types": { "constituency_name": "string"}
+					}
+				}
+			]
+		}
+	]
+}

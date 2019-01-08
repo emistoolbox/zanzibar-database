@@ -1,0 +1,23 @@
+{
+	"processes": [
+		{
+			"source": { "type": "xls", "filename": "${DATA}/School_Table_MASTER.xlsx", "worksheet": "Districts" },
+			"pipes": [
+				{
+					"target": {
+						"type": "sql", 
+						"table": "districts", 
+						"withDelete": true, 
+						"columns": {
+							"district_id": "district_id", 
+							"district_name": "district_name",
+							"region_id": "region_id"
+						}, 
+						"types": { "district_name": "string"}
+					}
+				}
+			]
+		}
+    ]
+}
+

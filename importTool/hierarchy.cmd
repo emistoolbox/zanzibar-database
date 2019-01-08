@@ -1,0 +1,12 @@
+bin\import.cmd json\hierarchy\nation.json
+bin\import.cmd json\hierarchy\teacher_centers.json
+bin\import.cmd json\hierarchy\shehias.json
+bin\import.cmd json\hierarchy\islands.json
+bin\import.cmd json\hierarchy\clusters.json
+bin\import.cmd json\hierarchy\constituencies.json
+bin\import.cmd json\hierarchy\districts.json
+bin\import.cmd json\hierarchy\regions.json
+bin\import.cmd json\hierarchy\wards.json
+bin\import.cmd json\hierarchy\cluster-hierarchy.json
+bin\import.cmd json\hierarchy\shehia-hierarchy.json
+bin\import.cmd json\hierarchy\schools.json

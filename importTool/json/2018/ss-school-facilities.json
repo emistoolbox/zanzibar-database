@@ -73,6 +73,7 @@
 							"emis_id": "emis_id",
 							"year": "year", 
 							"education_level_id": "education_level_id",
+                            "hasWater": "hasWater", 
                             "hasPower": "hasElectricity", 
 							"hasLibrary": "hasLibrary", 
 							"hasLaboratory": "other_rooms_id__7",
