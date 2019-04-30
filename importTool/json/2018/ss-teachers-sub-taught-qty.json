@@ -41,6 +41,10 @@
                     { "type": "csv", "filename": "${DATA}/2018/SECONDARY/Zanzibar MOEVT SECONDARY ASC.tab" }
                 ]
             }
+        }, 
+        "EducationToCondensed": {
+            "type": "simple", 
+            "mappings": "0=0,1=0,2=0,3=1,4=2,5=3"
         }
     },
     
@@ -57,7 +61,7 @@
 				"filters": [
                     { "type": "rename", "renames": { "r_teachers_sub_taught__id": "subject_id", "r_teachers_sub_taught_qty__id": "education_id" }},
 					{ "type": "copy", "copies": { "year": "interview__id", "emis_id": "interview__id", "education_level_id": "interview__id" } }, 
-					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup", "education_level_id": "EducationLevelLookup" }},
+					{ "type": "map", "mappings": { "year": "YearLookup", "emis_id": "EmisIdLookup", "education_level_id": "EducationLevelLookup", "education_id": "EducationToCondensed" }},
 					{
 						"type": "expand", 
 						"valueColumn": "qty",
@@ -80,6 +84,7 @@
 						"columns": { 
 							"emis_id": "emis_id",
 							"year": "year", 
+                            "education_level_id": "education_level_id",
 							"gender_id": "gender_id", 
                             "subject_id": "subject_id",
                             "teacher_edu_condensed_id": "education_id",   

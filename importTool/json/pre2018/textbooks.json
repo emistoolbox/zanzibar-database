@@ -39,7 +39,7 @@
 					}, 
 					{
 						"type": "filtered", 
-						"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/PRI ABSTRACT.csv", "consts": { "level": "1"} }, 
+                        "source": { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "PRI ABSTRACT", "consts": { "level": "1" } },
 						"filters": [
 							{
 								"type": "expand", 
@@ -132,7 +132,7 @@
 					}, 
 					{
 						"type": "filtered", 
-						"source": { "type": "csv", "filename": "../../data/EMIS_ZANZIBAR/SEC ABSTRACT.csv", "consts": { "level": "2"} }, 
+						"source": { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "SEC ABSTRACT", "consts": { "level": "2" } }, 
 						"filters": [
 							{
 								"type": "expand", 

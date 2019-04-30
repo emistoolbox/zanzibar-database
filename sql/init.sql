@@ -1,4 +1,4 @@
---   
+--  
 -- HIERARCHY
 --
 DROP TABLE IF EXISTS wards; 
@@ -363,6 +363,7 @@ CREATE TABLE teacher_subject_taught
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, 
     emis_id INTEGER NOT NULL, 
     year INTEGER NOT NULL, 
+    education_level_id TINYINT NOT NULL, 
     gender_id TINYINT NOT NULL, 
     subject_id INTEGER NOT NULL, 
     teacher_edu_condensed_id TINYINT NOT NULL, 
@@ -515,11 +516,12 @@ CREATE TABLE textbooks
 DROP TABLE IF EXISTS lookup_subjects; 
 CREATE TABLE lookup_subjects
 (
-	subject_id INTEGER NOT NULL PRIMARY KEY, 
-	subject_name CHAR(32) NOT NULL, 
-	education_level_id TINYINT NOT NULL
+    subject_id INTEGER NOT NULL PRIMARY KEY, 
+    subject_name CHAR(32) NOT NULL, 
+    education_level_id TINYINT NOT NULL
 ); 
 
+DELETE FROM lookup_subjects; 
 INSERT INTO lookup_subjects VALUES
 (0, "Lugha", 0), 
 (1, "Dini ya Kiislam", 0), 
@@ -527,17 +529,18 @@ INSERT INTO lookup_subjects VALUES
 (3, "Mazingira", 0), 
 (4, "Michezo", 0), 
 (5, "Sanaa na Ufundi", 0),
+(6, "Kiarabu", 0),
 
-(100, "Arabic", 1), 
-(101, "Computer", 1), 
-(102, "English", 1), 
-(103, "Islamic", 1), 
+(100, "Kiarabu", 1), 
+(101, "Kompyuta", 1), 
+(102, "Kiingereza", 1), 
+(103, "Dini", 1), 
 (104, "Kiswahili", 1), 
 (105, "Hisabati", 1), 
 (106, "Sayansi", 1), 
 (107, "Sayansi Jamii", 1), 
 (108, "Michezo", 1), 
-(109, "Elimu Amali", 1), 
+(109, "Elimu ya Amali", 1), 
 (110, "Geography", 1), 
 (111, "Historia", 1), 
 (112, "Uraia", 1),
@@ -555,8 +558,11 @@ INSERT INTO lookup_subjects VALUES
 (210, "Kisw", 2), 
 (211, "Math", 2), 
 (212, "Phys", 2), 
-(213 ,"Civ", 2); 
-
+(213 ,"Civ", 2),
+(214, "Physical Education", 2),
+(215, "Economics", 2),
+(216, "Fine Arts", 2),
+(217, "French", 2); 
 
 DROP TABLE IF EXISTS lookup_genders; 
 CREATE TABLE lookup_genders
@@ -850,11 +856,12 @@ FROM classrooms c
 LEFT JOIN school_shifts s ON s.emis_id = c.emis_id AND s.education_level_id = c.education_level_id AND s.year = c.year
 GROUP BY c.emis_id, c.year, c.education_level_id; 
 
-DROP VIEW IF EXISTS seats; 
-CREATE VIEW seats AS 
-SELECT f.emis_id, f.year, f.education_level_id, SUM(CASE WHEN furniture_id IN (0, 1, 2) THEN furniture_id + 1 WHEN furniture_id = 3 THEN 1 ELSE 0 END) as seats
+DROP VIEW IF EXISTS seats;
+CREATE VIEW seats AS
+SELECT f.emis_id, f.YEAR, f.education_level_id, SUM((CASE WHEN f.furniture_id IN (0, 1, 2) THEN f.furniture_id + 1 WHEN f.furniture_id = 3 THEN 1 ELSE 0 END)*f.qty) AS seats
 FROM furnitures f
-GROUP BY f.emis_id, f.year, f.education_level_id; 
+WHERE f.furniture_id IN (0, 1, 2, 3)
+GROUP BY f.emis_id, f.education_level_id, f.YEAR
 
 DROP VIEW IF EXISTS seats_functional; 
 CREATE VIEW seats_functional AS 
@@ -1069,7 +1076,11 @@ INSERT INTO lookup_other_tlms VALUES
 (22, "Physics Kit"), 
 (21, "Biology Kit"), 
 (20, "Chemistry Kit"), 
-(19, "Physical education kit");
+(19, "Physical education kit"),
+(23, "Standard I Leveled Readers"),
+(24, "Standard II Leveled Readers"),
+(25, "Standard III Non-Fiction Readers"),
+(26, "Standard IV Non-Fiction Readers");
 
 DROP TABLE if exists other_tlms;
 CREATE TABLE other_tlms
@@ -1727,3 +1738,88 @@ FROM enrolment_ages_ss e
 INNER JOIN lookup_education_levels l ON l.education_level_id = e.education_level_id
 GROUP BY emis_id, year, education_level_id, gender_id, age_type
 HAVING qty > 0; 
+
+DROP VIEW IF EXISTS schools_district_hierarchy; 
+CREATE VIEW schools_district_hierarchy AS 
+SELECT emis_id, year, district_id
+FROM schools_shehia_hierarchy_by_year sch
+INNER JOIN shehias s ON s.shehia_id = sch.shehia_id
+INNER JOIN wards w ON w.ward_id = s.ward_id
+INNER JOIN constituencies c ON c.constituency_id =  w.constituency_id; 
+
+DROP VIEW IF EXISTS school_active_shifts;
+CREATE VIEW school_active_shifts AS 
+SELECT sl.emis_id, sl.year, sl.education_level_id, IF(s.shifts IS NULL, 1, s.shifts) as shifts
+FROM schools_active_by_level sl
+LEFT JOIN school_shifts s ON sl.emis_id = s.emis_id AND sl.year = s.year AND sl.education_level_id = s.education_level_id; 
+
+--- COMPUTERS --- 
+DROP VIEW IF EXISTS computers; 
+CREATE VIEW computers AS 
+(SELECT t.emis_id, t.year, t.education_level_id, SUM(qty) as qty, SUM(CASE WHEN shifts IS NULL THEN qty ELSE shifts * qty END) as computers_functional
+FROM other_tlms t
+LEFT JOIN school_shifts s ON s.emis_id = t.emis_id AND s.education_level_id = t.education_level_id AND s.year = t.year
+WHERE other_tlms_id = 14
+GROUP BY t.emis_id, t.year, t.education_level_id); 
+
+--- lookup_ages ---
+
+DROP TABLE IF EXISTS lookup_ages; 
+CREATE TABLE lookup_ages
+(
+    age_id TINYINT NOT NULL PRIMARY KEY, 
+    age TINYINT NOT NULL,
+    age_name CHAR(32) NOT NULL,
+    education_level_id TINYINT NOT NULL
+); 
+
+INSERT INTO lookup_ages VALUES
+(0, 3, "Age 3", 0), 
+(1, 4, "Age 4", 0),
+(2, 5, "Age 5", 0),
+(3, 6, "Age 6", 0),
+(4, 7, "7 na Zaidi", 0),
+
+(5, 5, "Chinya ya 6", 1),
+(6, 6, "Age 6", 1),
+(7, 7, "Age 7", 1),
+(8, 8, "Age 8", 1),
+(9, 9, "Age 9", 1),
+(10, 10, "Age 10", 1),
+(11, 11, "Age 11", 1),
+(12, 12, "Age 12", 1),
+(13, 13, "Age 13", 1),
+(14, 14, "Age 14", 1),
+(15, 15, "Zaidi ya 14", 1),
+
+(16, 11, "Chinya ya 12", 2),
+(17, 12, "Age 12", 2),
+(18, 13, "Age 13", 2),
+(19, 14,  "Age 14", 2),
+(20, 15, "Age 15", 2),
+(21, 16, "Age 16", 2),
+(22, 17, "Age 17", 2),
+(23, 18, "Age 18", 2),
+(24, 19, "Age 19", 2),
+(25, 20, "Zaidi ya 19", 2);
+
+
+
+DROP TABLE IF EXISTS lookup_ages_entrants; 
+CREATE TABLE lookup_ages_entrants
+(
+    age_entrants_id TINYINT NOT NULL PRIMARY KEY, 
+    age TINYINT NOT NULL,
+    age_name CHAR(32) NOT NULL,
+    education_level_id TINYINT NOT NULL
+); 
+
+INSERT INTO lookup_ages_entrants VALUES
+
+(0, 5, "Chinya ya 6", 1),
+(1, 6, "Age 6", 1),
+(2, 7, "Age 7", 1),
+(3, 8, "Age 8", 1),
+(4, 9, "Age 9", 1),
+(5, 10, "Age 10", 1),
+(6, 11, "Zaidi ya 10", 1);

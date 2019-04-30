@@ -10,7 +10,7 @@
 				"sources": [
                     { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS FORM IV PASS-FAIL", "consts": { "exam_grade_id": "3" } },
                     { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS FORM II PASS-FAIL", "consts": { "exam_grade_id": "2" } },
-                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS FORM II PASS-FAIL", "consts": { "exam_grade_id": "1" } },
+                    { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS STD VI PASS-FAIL", "consts": { "exam_grade_id": "1" } },
                     { "type": "xls", "filename": "${DATA}/pre2018/ASC-2015-2017/EMIS MASTER DATASETS_VALIDATED.xlsx", "worksheet": "EXAMS STD IV SAT", "consts": { "exam_grade_id": "0" } }
 				],
 				"filters": [

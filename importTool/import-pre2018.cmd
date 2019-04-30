@@ -9,7 +9,7 @@ bin\import.cmd json\pre2018\entrants-age.json
 bin\import.cmd json\pre2018\entrants-education.json
 bin\import.cmd json\pre2018\furniture.json
 bin\import.cmd json\pre2018\school-positions.json
-bin\import.cmd json\pre2018\schools-hierarchy.json
+REM bin\import.cmd json\pre2018\schools-hierarchy.json
 bin\import.cmd json\pre2018\school-infos.json
 bin\import.cmd json\pre2018\teacher-attritions.json
 bin\import.cmd json\pre2018\teacher-experiences.json
@@ -21,3 +21,5 @@ bin\import.cmd json\pre2018\exams-scores.json
 bin\import.cmd json\pre2018\population.json
 bin\import.cmd json\pre2018\school-shifts.json
 bin\import.cmd json\pre2018\teacher-educations.json
+bin\import.cmd json\pre2018\facilities.json
+bin\import.cmd json\pre2018\computers.json

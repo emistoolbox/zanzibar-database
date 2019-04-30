@@ -10,3 +10,4 @@ bin\import.cmd json\hierarchy\wards.json
 bin\import.cmd json\hierarchy\cluster-hierarchy.json
 bin\import.cmd json\hierarchy\shehia-hierarchy.json
 bin\import.cmd json\hierarchy\schools.json
+bin\import.cmd json\hierarchy\schools-active.json
